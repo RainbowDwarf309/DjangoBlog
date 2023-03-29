@@ -22,9 +22,9 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'slug', 'category', 'created_at', 'get_photo', 'views')
     list_display_links = ('id', 'title')
     search_fields = ('title',)
-    list_filter = ('category', )
+    list_filter = ('category', 'tags')
     readonly_fields = ('views', 'created_at', 'get_photo')
-    fields = ('title', 'slug', 'category', 'content', 'author', 'photo', 'get_photo', 'views', 'created_at')
+    fields = ('title', 'slug', 'category', 'tags', 'content', 'author', 'photo', 'get_photo', 'views', 'created_at')
 
     def get_photo(self, obj):
         if obj.photo:
@@ -38,10 +38,10 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
 
-# class TagAdmin(admin.ModelAdmin):
-#     prepopulated_fields = {"slug": ("title",)}
+class TagAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("title",)}
 
 
 admin.site.register(Category, CategoryAdmin)
-# admin.site.register(Tag, TagAdmin)
+admin.site.register(Tag, TagAdmin)
 admin.site.register(Post, PostAdmin)
