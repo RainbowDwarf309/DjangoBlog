@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+{{ block.super }}: {% translate "Registration done" %}
+{% endblock %}
+
+{% block extend_head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'custom_css/login_registration_change_passwords.css' %}">
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="limiter">
+		<div class="container-login100 min-height">
+			<div class="login100-form-title">
+    	    	<h2>{% translate  "You are a member"}</h2>
+					<div>
+						<strong><a href="{% url 'logout' %}" class="txt1">{% translate "Log out" %}</a></strong>
+						<small class="txt1"> {% translate "or" %}</small>
+						<strong><a href="{% url 'home' %}" class="txt1">{% translate "go home" %}</a></strong>
+					</div>
+			</div>
+		</div>
+</div>
+{% else %}
+<br>
+<div class="container">
+		<div class="col-md-12">
+			<div class="login100-form-title">
+    	    	<h2>{% translate  "Registration completed successfully" %}</h2>
+					<div>
+						<strong><a href="{% url 'login' %}" class="txt1">{% translate "Log in" %}</a></strong>
+						<small class="txt1"> {% translate "or" %}</small>
+						<strong><a href="{% url 'home' %}" class="txt1">{% translate "go home" %}</a></strong>
+					</div>
+			</div>
+		</div>
+</div>
+{% endif %}
+{% endblock %}

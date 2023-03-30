@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}
+{{ block.super }}: {% translate "Registration" %}
+{% endblock %}
+
+{% block extend_head %}
+<!--    <link rel="stylesheet" type="text/css" href="{% static 'custom_css/login_registration_change_passwords.css' %}">-->
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="container">
+		<div class="col-md-12">
+			<div class="login100-form-title">
+    	    	<h1>{% translate "You are a member" %}</h1>
+					<strong  class="txt1">{% translate "To register a new profile log out first" %}</strong>
+
+					<div>
+						<strong><a href="#" class="txt1">{% translate "Log out" %}</a></strong>
+					</div>
+			</div>
+		</div>
+</div>
+{% else %}
+
+
+<br>
+	<div class="container">
+		<div class="col-md-12">
+			<div class="wrap-login100 p-t-50 p-b-90">
+				<div class="login100-form-title">
+    	    	<h1>{% translate  "Registration" %}</h1>
+			</div>
+				<form method="post" class="login100-form validate-form flex-sb flex-w">
+					{% csrf_token %}
+					{{ form.non_field_errors }}
+					{{ form.username.errors }}
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "{% translate 'Username is required' %)">
+						{{ form.username }}
+						<span class="focus-input100"></span>
+					</div>
+					<br>
+						{{ form.password1.errors }}
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "{% translate 'Password is required' %}">
+						{{ form.password1 }}
+						<span class="focus-input100"></span>
+					</div>
+					<br>
+
+						{{ form.password2.errors }}
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "{% translate 'Password is required' %}">
+						{{ form.password2 }}
+						<span class="focus-input100"></span>
+					</div>
+
+					<br>
+						{{ form.email.errors }}
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "{% translate 'e-mail is required' %}">
+						{{ form.email }}
+					</div>
+
+					<br>
+					<br>
+					<div class="container-login100-form-btn m-t-17">
+						<button type="submit" class="btn btn-primary">
+							{% translate "Registration" %}
+						</button>
+											<div class="flex-sb-m w-full p-t-3 p-b-24">
+						<div>
+							<a href="#" class="txt1">{% translate "Forgot password?" %}</a>
+
+							<a href="{% url 'login' %}" class="txt1">{% translate  "Already have account? Log in" %}</a>
+						</div>
+					</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+{% endif %}
+{% endblock %}
