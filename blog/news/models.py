@@ -1,6 +1,29 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+from PIL import Image
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('User'))
+    avatar = models.ImageField(upload_to='photos/avatars/%Y/%m/%d/', verbose_name='User avatar', blank=False,
+                               default='photos/default_user_avatar.png',
+                               help_text=_('Only .png format. Less than 0.5mb.'))
+    bio = models.TextField(blank=True, max_length=200, verbose_name=_('information'))
+    first_name = models.CharField(max_length=60, blank=True, null=True)
+    last_name = models.CharField(max_length=60, blank=True, null=True)
+    email = models.EmailField(max_length=100, blank=True, null=True)
+    karma = models.BigIntegerField(verbose_name="Total karma", default=0)
+
+    def save(self, *args, **kwargs):
+        super().save()
+        img = Image.open(self.avatar.path)
+        # resize image
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.avatar.path)
 
 
 class Category(models.Model):
