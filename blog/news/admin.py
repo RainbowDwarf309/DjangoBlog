@@ -42,6 +42,13 @@ class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
 
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'karma')
+    search_fields = ('user__username', 'user__email')
+    view_on_site = False
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)
