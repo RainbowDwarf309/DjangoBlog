@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load sidebar %}
 <div class="page-sidebar text-center">
     <h6 class="sidebar-title section-title mb-4 mt-3">About</h6>
     <img src="{% static 'assets/imgs/avatar.jpg' %}" alt="" class="circle-100 mb-3">
@@ -22,17 +22,7 @@
         </div>
     </form>
 
-    <h6 class="sidebar-title mt-5 mb-4">Tags</h6>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#iusto</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#quibusdam</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#officia</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#animi</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#mollitia</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#quod</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#ipsa at</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#dolor</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#incidunt</a>
-    <a href="javascript:void(0)" class="badge badge-primary m-1">#possimus</a>
+    {% get_tags %}
 
     <h6 class="sidebar-title mt-5 mb-4">Instagram</h6>
     <div class="row px-3">
