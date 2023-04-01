@@ -11116,6 +11116,7 @@ hr {
 
 .btn.rounded {
   border-radius: 50px !important;
+  margin-bottom: 15px;
 }
 
 .btn.circle {
