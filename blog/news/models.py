@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.template.defaultfilters import slugify
 from PIL import Image
 
 
@@ -41,6 +42,12 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
         ordering = ['title']
 
+    def save(self, *args, **kwargs):
+        created = not self.pk
+        super().save(*args, **kwargs)
+        if created:
+            Tag.objects.create(title=str(self.title).lower(), slug=self.slug)
+
 
 class Tag(models.Model):
     title = models.CharField(max_length=50, unique=True)
@@ -59,7 +66,6 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
-
     title = models.CharField(max_length=150, verbose_name='Заголовок')
     slug = models.SlugField(max_length=255, verbose_name='Url', unique=True)
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='автор поста')
@@ -78,9 +84,14 @@ class Post(models.Model):
         return reverse('post', kwargs={"slug": self.slug})
 
     def __str__(self):
-        return self.title
+        return f"{self.title}, {self.author}, {self.category}, {self.slug}, {self.tags}"
 
     class Meta:
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
         ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)

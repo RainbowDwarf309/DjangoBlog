@@ -1,0 +1,5 @@
+<h6 class="sidebar-title mt-5 mb-4">Tags</h6>
+
+{% for tag in tags %}
+<a href="{{tag.get_absolute_url}}" class="badge badge-primary m-1">#{{ tag.title }}</a>
+{% endfor %}

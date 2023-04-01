@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card text-center mb-5">
+            {% for post in posts %}
+            <div class="card-header p-0">
+                <div class="blog-media">
+                    <img src="/static/assets/imgs/blog-2.jpg" alt="" class="w-100">
+                    <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
+                </div>
+            </div>
+            <div class="card-body px-0">
+                <h5 class="card-title mb-2">{{ post.title }}</h5>
+                <small class="small text-muted">{{ post.created_at|date:"M d Y" }}
+                    <span class="px-2">-</span>
+                    <a href="#" class="text-muted">34 Comments</a>
+                </small>
+                <p class="my-2">{{ post.content|safe|linebreaks|truncatewords:30 }}</p>
+            </div>
+
+            <div class="card-footer p-0 text-center">
+                <a href="{{post.get_absolute_url}}" class="btn btn-outline-dark btn-sm">READ MORE</a>
+            </div>
+            <br>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card text-center mb-5">
+            {% for post in posts %}
+            <div class="card-header p-0">
+                <div class="blog-media">
+                    <img src="/static/assets/imgs/blog-2.jpg" alt="" class="w-100">
+                    <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
+                </div>
+            </div>
+            <div class="card-body px-0">
+                <h5 class="card-title mb-2">{{ post.title }}</h5>
+                <small class="small text-muted">{{ post.created_at|date:"M d Y" }}
+                    <span class="px-2">-</span>
+                    <a href="#" class="text-muted">34 Comments</a>
+                </small>
+                <p class="my-2">{{ post.content|safe|linebreaks|truncatewords:30 }}</p>
+            </div>
+
+            <div class="card-footer p-0 text-center">
+                <a href="{{post.get_absolute_url}}" class="btn btn-outline-dark btn-sm">READ MORE</a>
+            </div>
+            <br>
+        {% endfor %}
+        </div>
+    </div>
+</div>
