@@ -136,3 +136,5 @@ INTERNAL_IPS = ['127.0.0.1']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+FORM_MAXIMUM_AVATAR_SIZE_BYTES = 524288  # defines userprofile avatar maximum size in bytes

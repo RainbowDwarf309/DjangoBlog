@@ -1,4 +1,6 @@
+import imghdr
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -41,6 +43,23 @@ class UserRegistrationForm(UserCreationForm):
 
 class UserProfileUpdateForm(forms.ModelForm):
 
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar', None)
+        if not avatar:
+            raise ValidationError(_('Couldn\'t read image.'))
+        try:
+            if imghdr.what(avatar) != 'png':
+                raise ValidationError(_('Image must be in .png format'))
+            if avatar.size > settings.FORM_MAXIMUM_AVATAR_SIZE_BYTES:
+                raise ValidationError(_('Image file too large ( > 0.5 mb )'))
+            return avatar
+        except ValidationError as e:
+            raise e
+        except FileNotFoundError:
+            raise ValidationError(_('Couldn\'t read image. Please, update avatar.'))
+        except Exception:
+            raise ValidationError(_('Couldn\'t read image.'))
+
     class Meta:
         model = UserProfile
         fields = ['avatar', 'first_name', 'last_name', 'bio']
@@ -81,5 +100,5 @@ class CreatePostForm(forms.ModelForm):
     def clean_title(self):
         title = self.cleaned_data['title']
         if re.match(r'\d', title):
-            raise ValidationError('Название не должно начинаться с цифры')
+            raise ValidationError('The title must not begin with a number')
         return title
