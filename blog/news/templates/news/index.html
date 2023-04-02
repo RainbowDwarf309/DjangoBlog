@@ -3,10 +3,12 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-<header class="page-header"></header>
+
 
 {% block content %}
-
+{% include '_inc/_top_nav.html' %}
+{% include '_inc/_nav.html' %}
+<header class="page-header"></header>
 
 <div class="container">
     <section>

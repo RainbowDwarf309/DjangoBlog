@@ -11116,6 +11116,7 @@ hr {
 
 .btn.rounded {
   border-radius: 50px !important;
+  margin-bottom: 15px;
 }
 
 .btn.circle {
@@ -11456,11 +11457,11 @@ pre .code {
   font-size: 13px;
 }
 
-.form-control.form-control-lg {
+/*.form-control.form-control-lg {
   font-size: 16px;
   height: 50px;
   line-height: 60px;
-}
+}*/
 
 select.form-control,
 textarea.form-control {

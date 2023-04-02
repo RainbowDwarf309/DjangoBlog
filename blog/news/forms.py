@@ -39,6 +39,26 @@ class UserRegistrationForm(UserCreationForm):
         return cd['password2']
 
 
+class UserProfileUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = UserProfile
+        fields = ['avatar', 'first_name', 'last_name', 'bio']
+        widgets = {
+            'avatar': forms.FileInput(attrs={'class': 'form-control form-control-lg',
+                                             'id': 'formFileLg', 'type': 'file'}),
+            'first_name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'Enter your first name'}
+            ),
+            'last_name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': 'Enter your last name'}
+            ),
+            'bio': forms.Textarea(
+                attrs={'class': 'form-control', 'placeholder': _('Enter some info about you')}
+            ),
+        }
+
+
 class CreatePostForm(forms.ModelForm):
     title = forms.CharField(max_length=250, widget=forms.TextInput(
         attrs={

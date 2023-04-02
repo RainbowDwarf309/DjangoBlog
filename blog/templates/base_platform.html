@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_author %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_description %}
+{{ block.super }}
+{% endblock %}
+
+
+{% block title %}{{ block.super }}{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'assets/css/material-dashboard.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock  %}
