@@ -36,8 +36,7 @@ class SinglePost(FormMixin, DetailView):
         context['comments'] = Comment.objects.exclude(status=Comment.AttrStatus.INVISIBLE).\
             select_related('post', 'user_submitter__userprofile', 'parent').\
             filter(post=Post.objects.select_related('author__userprofile').get(slug=self.kwargs['slug']))
-        context['form'] = self.form_class(initial={'post': Post.objects.select_related('author', 'author__userprofile',
-                                                                                       'category').
+        context['form'] = self.form_class(initial={'post': Post.objects.select_related('author__userprofile').
                                           get(slug=self.kwargs['slug'])})
         return context
 
