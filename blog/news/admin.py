@@ -48,7 +48,7 @@ class CommentAdmin(MPTTModelAdmin):
 
     mptt_indent_field = "id"
 
-    list_display = ('id', 'user_submitter', 'status', 'text',)
+    list_display = ('id', 'user_submitter', 'post', 'status', 'text',)
     list_display_links = ('id', 'text')
     list_editable = ('status',)
     search_fields = ('id', 'user_submitter__username', 'text')

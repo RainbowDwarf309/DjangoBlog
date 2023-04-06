@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
@@ -34,12 +33,13 @@ class SinglePost(FormMixin, DetailView):
         self.object.views = F('views') + 1
         self.object.save()
         self.object.refresh_from_db()
-        context['comments'] = self.get_comments()
-        context['form'] = self.form_class(initial={'post': Post.objects.get(slug=self.kwargs['slug'])})
+        context['comments'] = Comment.objects.exclude(status=Comment.AttrStatus.INVISIBLE).\
+            select_related('post', 'user_submitter__userprofile', 'parent').\
+            filter(post=Post.objects.select_related('author__userprofile').get(slug=self.kwargs['slug']))
+        context['form'] = self.form_class(initial={'post': Post.objects.select_related('author', 'author__userprofile',
+                                                                                       'category').
+                                          get(slug=self.kwargs['slug'])})
         return context
-
-    def get_comments(self):
-        return self.get_object().comments.exclude(status=Comment.AttrStatus.INVISIBLE)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -54,7 +54,6 @@ class SinglePost(FormMixin, DetailView):
             new_comment = form.save(commit=False)
             new_comment.user_submitter = self.request.user
             new_comment.text = form.cleaned_data['text']
-            # new_comment.parent = None
             new_comment.save()
             return HttpResponseRedirect(reverse("post", kwargs={'slug': self.object.slug}))
         else:
@@ -68,7 +67,8 @@ class PostsByCategory(ListView):
     allow_empty = False
 
     def get_queryset(self):
-        return Post.objects.filter(category__slug=self.kwargs['slug'])
+        return Post.objects.filter(category=Category.objects.get(slug=self.kwargs['slug']),
+                                   is_published=True).select_related('category').prefetch_related('tags')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -83,7 +83,8 @@ class PostsByTag(ListView):
     allow_empty = False
 
     def get_queryset(self):
-        return Post.objects.filter(tags__slug=self.kwargs['slug'])
+        return Post.objects.filter(tags=Tag.objects.get(slug=self.kwargs['slug']),
+                                   is_published=True).select_related('category').prefetch_related('tags')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -104,9 +105,3 @@ class CreatePost(CreateView):
         context['title'] = 'Django Blog'
         context['form'] = self.form_class(initial={'author': self.request.user})
         return context
-
-
-
-
-
-
