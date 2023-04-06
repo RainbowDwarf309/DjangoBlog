@@ -1,0 +1,47 @@
+{% load i18n %}
+{% load static %}
+{% load mptt_tags %}
+
+<div class="card-footer">
+    <h6 class="mt-5 mb-3 text-center"><a href="#" class="text-dark">Comments {{post.comments.count}}</a></h6>
+    <hr>
+    {% recursetree comments %}
+    <div class="media">
+        <img src="{{ node.user_submitter.userprofile.avatar.url }}"
+             class="mr-3 thumb-sm rounded-circle"
+             alt="{{ node.user_submitter.username }} {% translate 'avatar picture' %}">
+        <div class="media-body" id="card-{{ node.pk }}">
+            <h6 class="mt-0">{{ node.user_submitter }}</h6>
+            {% if node.status == "VISIBLE" %}
+            <p>{{ node.text }}</p>
+            {% elif node.status == "DELETED" and not node.is_last_visible %}
+            <p>{% translate "Comment was deleted" %}</p>
+            {% endif %}
+            {% if node.status == "VISIBLE" and node.level < 3 %}
+            <a href="#a" onclick="$('#collapse-{{ node.pk }}').fadeIn(500);childComment({{node.pk}})"
+               class="text-dark small font-weight-bold"><i class="ti-back-right"></i>
+                Replay</a>
+            {% endif %}
+            <div class="media mt-4">
+                {% if not node.is_leaf_node %}
+                {{ children }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endrecursetree %}
+
+<h6 class="mt-5 mb-3 text-center"><a href="#a" class="text-dark">Write Your Comment</a></h6>
+<hr>
+<form action="" method="post" class="form">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.text.errors }}
+    {{ form.post }}
+    {{ form.parent }}
+    {{ form.text }}
+    <div class="mt-2 text-right"><input class="btn btn-primary btn-block" type="submit"
+                                        value="{% translate 'Post comment' %}"/>
+    </div>
+</form>
