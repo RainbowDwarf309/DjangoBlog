@@ -4,8 +4,10 @@
             {% for post in posts %}
             <div class="card-header p-0">
                 <div class="blog-media">
-                    <img src="/static/assets/imgs/blog-2.jpg" alt="" class="w-100">
+                    <img src="{{ post.photo.url}}" alt="" class="w-100">
+                    {% if post.tags.exists %}
                     <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="card-body px-0">
@@ -29,8 +31,10 @@
             {% for post in posts %}
             <div class="card-header p-0">
                 <div class="blog-media">
-                    <img src="/static/assets/imgs/blog-2.jpg" alt="" class="w-100">
+                    <img src="{{ post.photo.url}}" alt="" class="w-100">
+                    {% if post.tags.exists %}
                     <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="card-body px-0">

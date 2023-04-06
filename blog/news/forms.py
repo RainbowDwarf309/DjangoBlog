@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import re
-from .models import UserProfile, Post
+from .models import Comment, UserProfile, Post
+from mptt.forms import TreeNodeChoiceField
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -102,3 +103,32 @@ class CreatePostForm(forms.ModelForm):
         if re.match(r'\d', title):
             raise ValidationError('The title must not begin with a number')
         return title
+
+
+class CommentSubmitForm(forms.ModelForm):
+    parent = TreeNodeChoiceField(queryset=Comment.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['parent'].widget.attrs.update({'class': 'd-none'})
+        self.fields['parent'].label = ''
+        self.fields['parent'].required = False
+
+    class Meta:
+        model = Comment
+        fields = ['post', 'parent', 'text']
+        widgets = {
+            'post': forms.HiddenInput(),
+            'parent': forms.HiddenInput(),
+            'text': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': '10',
+                    'placeholder': _('Enter Your Comment Here'),
+                }
+            )
+        }
+
+    def save(self, *args, **kwargs):
+        Comment.objects.rebuild()
+        return super(CommentSubmitForm, self).save(*args, **kwargs)

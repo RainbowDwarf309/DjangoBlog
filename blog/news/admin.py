@@ -2,6 +2,7 @@ from django.contrib import admin
 from django import forms
 # from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django.utils.safestring import mark_safe
+from mptt.admin import MPTTModelAdmin, TreeRelatedFieldListFilter
 
 from .models import *
 
@@ -42,6 +43,22 @@ class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
 
+class CommentAdmin(MPTTModelAdmin):
+    mptt_level_indent = 20
+
+    mptt_indent_field = "id"
+
+    list_display = ('id', 'user_submitter', 'post', 'status', 'text',)
+    list_display_links = ('id', 'text')
+    list_editable = ('status',)
+    search_fields = ('id', 'user_submitter__username', 'text')
+    view_on_site = False
+    list_filter = (
+        ('parent', TreeRelatedFieldListFilter),
+        'status',
+    )
+
+
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'karma')
     search_fields = ('user__username', 'user__email')
@@ -52,3 +69,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(Comment, CommentAdmin)
