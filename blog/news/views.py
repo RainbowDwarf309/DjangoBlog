@@ -6,15 +6,18 @@ from .models import Post, Category, Tag, Comment
 from .forms import CreatePostForm
 from django.utils.decorators import method_decorator
 from django.urls import reverse, reverse_lazy
-from django.db.models import F
+from django.db.models import F, Q
 from .forms import CommentSubmitForm
 
 
-class Home(ListView):
+class HomeView(ListView):
     model = Post
     template_name = 'news/index.html'
     context_object_name = 'posts'
     paginate_by = 4
+
+    def get_queryset(self):
+        return Post.objects.filter(is_published=True).select_related('category').prefetch_related('tags')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -22,7 +25,7 @@ class Home(ListView):
         return context
 
 
-class SinglePost(FormMixin, DetailView):
+class SinglePostView(FormMixin, DetailView):
     model = Post
     template_name = 'news/single_post.html'
     context_object_name = 'post'
@@ -33,8 +36,8 @@ class SinglePost(FormMixin, DetailView):
         self.object.views = F('views') + 1
         self.object.save()
         self.object.refresh_from_db()
-        context['comments'] = Comment.objects.exclude(status=Comment.AttrStatus.INVISIBLE).\
-            select_related('post', 'user_submitter__userprofile', 'parent').\
+        context['comments'] = Comment.objects.exclude(status=Comment.AttrStatus.INVISIBLE). \
+            select_related('post', 'user_submitter__userprofile', 'parent'). \
             filter(post=Post.objects.select_related('author__userprofile').get(slug=self.kwargs['slug']))
         context['form'] = self.form_class(initial={'post': Post.objects.select_related('author__userprofile').
                                           get(slug=self.kwargs['slug'])})
@@ -59,7 +62,7 @@ class SinglePost(FormMixin, DetailView):
             return HttpResponseRedirect(reverse("login"))
 
 
-class PostsByCategory(ListView):
+class PostsByCategoryView(ListView):
     template_name = 'news/index.html'
     context_object_name = 'posts'
     paginate_by = 4
@@ -75,7 +78,7 @@ class PostsByCategory(ListView):
         return context
 
 
-class PostsByTag(ListView):
+class PostsByTagView(ListView):
     template_name = 'news/index.html'
     context_object_name = 'posts'
     paginate_by = 4
@@ -92,7 +95,7 @@ class PostsByTag(ListView):
 
 
 @method_decorator(login_required, name='dispatch')
-class CreatePost(CreateView):
+class CreatePostView(CreateView):
     form_class = CreatePostForm
     template_name = 'news/create_post.html'
     context_object_name = 'news'
@@ -104,3 +107,22 @@ class CreatePost(CreateView):
         context['title'] = 'Django Blog'
         context['form'] = self.form_class(initial={'author': self.request.user})
         return context
+
+
+class SearchPostView(ListView):
+    template_name = 'news/search_posts.html'
+    context_object_name = 'posts'
+    allow_empty = True
+    ordering = '-created_at'
+    paginate_by = 4
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = f"search={self.request.GET.get('search')}&"
+        return context
+
+    def get_queryset(self):
+        search_query = self.request.GET.get('search')
+        queryset = Post.objects.filter(Q(title__icontains=search_query) | Q(author__username__icontains=search_query)).\
+            prefetch_related('tags').exclude(is_published=False).order_by(self.ordering)
+        return queryset

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block content %}
+{% include '_inc/_top_nav.html' %}
+{% include '_inc/_nav.html' %}
+<header class="page-header"></header>
+
+<div class="container">
+    <section>
+        <div class="feature-posts">
+            <a href="single-post.html" class="feature-post-item">
+                <span>Featured Posts</span>
+            </a>
+            <a href="single-post.html" class="feature-post-item">
+                <img src="{% static 'assets/imgs/img-1.jpg' %}" class="w-100" alt="">
+                <div class="feature-post-caption">Incidunt Quaerat</div>
+            </a>
+            <a href="single-post.html" class="feature-post-item">
+                <img src="{% static 'assets/imgs/img-2.jpg' %}" class="w-100" alt="">
+                <div class="feature-post-caption">Culpa Ducimus</div>
+            </a>
+            <a href="single-post.html" class="feature-post-item">
+                <img src="{% static 'assets/imgs/img-3.jpg' %}" class="w-100" alt="">
+                <div class="feature-post-caption">Temporibus Simile</div>
+            </a>
+            <a href="single-post.html" class="feature-post-item">
+                <img src="{% static 'assets/imgs/img-4.jpg' %}" class="w-100" alt="">
+                <div class="feature-post-caption">Adipisicing</div>
+            </a>
+        </div>
+    </section>
+    <hr>
+    <div class="page-container">
+        <div class="page-content">
+            <div class="col-lg-12">
+                <div class="card text-center mb-5">
+                    {% for post in posts %}
+                    <div class="card-header p-0">
+                        <div class="blog-media">
+                            <img src="{{ post.photo.url}}" alt="" class="w-100">
+                            {% if post.tags.exists %}
+                            <a href="{{post.tags.get_absolute_url}}"
+                               class="badge badge-primary">#{{post.tags.all.0}}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body px-0">
+                        <h5 class="card-title mb-2">{{ post.title }}</h5>
+                        <small class="small text-muted"><i class="ti-calendar pr-1"></i>
+                            {{ post.created_at|date:"M d Y" }}
+                            <span class="px-2">-</span>
+                            <a href="#" class="text-muted">{{post.comments.count}} Comments</a>
+                        </small>
+                        <p class="my-2">{{ post.content|safe|linebreaks|truncatewords:30 }}</p>
+                    </div>
+
+                    <div class="card-footer p-0 text-center">
+                        <a href="{{post.get_absolute_url}}" class="btn btn-outline-dark btn-sm">READ MORE</a>
+                    </div>
+                    <br>
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block my-4">Load More Posts</button>
+        </div>
+
+
+        <!-- Sidebar -->
+        {% include '_inc/_sidebar.html' %}
+
+    </div>
+</div>
+{% include '_inc/_instagram.html' %}
+
+{% endblock %}
+
+

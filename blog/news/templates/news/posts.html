@@ -12,9 +12,9 @@
             </div>
             <div class="card-body px-0">
                 <h5 class="card-title mb-2">{{ post.title }}</h5>
-                <small class="small text-muted">{{ post.created_at|date:"M d Y" }}
+                <small class="small text-muted"><i class="ti-calendar pr-1"></i>{{ post.created_at|date:"M d Y" }}
                     <span class="px-2">-</span>
-                    <a href="#" class="text-muted">34 Comments</a>
+                    <a href="#" class="text-muted">{{post.comments.count}} Comments</a>
                 </small>
                 <p class="my-2">{{ post.content|safe|linebreaks|truncatewords:30 }}</p>
             </div>
@@ -23,7 +23,7 @@
                 <a href="{{post.get_absolute_url}}" class="btn btn-outline-dark btn-sm">READ MORE</a>
             </div>
             <br>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
     <div class="col-lg-6">
@@ -39,9 +39,9 @@
             </div>
             <div class="card-body px-0">
                 <h5 class="card-title mb-2">{{ post.title }}</h5>
-                <small class="small text-muted">{{ post.created_at|date:"M d Y" }}
+                <small class="small text-muted"><i class="ti-calendar pr-1"></i>{{ post.created_at|date:"M d Y" }}
                     <span class="px-2">-</span>
-                    <a href="#" class="text-muted">34 Comments</a>
+                    <a href="#" class="text-muted">{{post.comments.count}} Comments</a>
                 </small>
                 <p class="my-2">{{ post.content|safe|linebreaks|truncatewords:30 }}</p>
             </div>
@@ -50,7 +50,7 @@
                 <a href="{{post.get_absolute_url}}" class="btn btn-outline-dark btn-sm">READ MORE</a>
             </div>
             <br>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
 </div>
