@@ -10,5 +10,8 @@ def get_tags():
     return {"tags": tags}
 
 
-
-
+@register.inclusion_tag('news/popular_posts.html')
+def get_popular_posts():
+    posts = Post.objects.select_related('category').prefetch_related('tags').filter(is_published=True).\
+        order_by('views', 'likes')[:4]
+    return {"posts": posts}

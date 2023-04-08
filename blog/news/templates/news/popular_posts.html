@@ -1,0 +1,18 @@
+<h6 class="sidebar-title mt-5 mb-4">Popular Posts</h6>
+{% for post in posts %}
+<div class="card mb-4">
+    <a href="{{post.get_absolute_url}}" class="overlay-link"></a>
+    <div class="card-header p-0">
+        <div class="blog-media">
+            <img src="{{ post.photo.url}}" alt="" class="w-100">
+            <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
+        </div>
+    </div>
+    <div class="card-body px-0">
+        <h5 class="card-title mb-2">{{ post.title }}</h5>
+        <small class="small text-muted"><i class="ti-calendar pr-1"></i> {{ post.created_at|date:"M d Y" }}
+        </small>
+        <p class="my-2">{{ post.content|safe|linebreaks|truncatewords:10 }}</p>
+    </div>
+</div>
+{% endfor %}
