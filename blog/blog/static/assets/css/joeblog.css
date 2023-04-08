@@ -5367,6 +5367,7 @@ input[type="button"].btn-block {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  margin-left:250px;
   padding-left: 0;
   list-style: none;
   border-radius: 0rem;
@@ -11535,11 +11536,11 @@ textarea.form-control {
 }
 
 .pagination.pagination-lg .page-item:first-child, .pagination.pagination-lg .page-item:last-child {
-  margin-top: 9px;
+  margin-top: 5px;
 }
 
 .pagination.pagination-lg .page-item:first-child a, .pagination.pagination-lg .page-item:last-child a {
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .progress {
