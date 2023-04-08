@@ -17,7 +17,7 @@ class HomeView(ListView):
     paginate_by = 4
 
     def get_queryset(self):
-        return Post.objects.filter(is_published=True).select_related('category').prefetch_related('tags')
+        return Post.objects.filter(is_published=True).select_related('category', 'author').prefetch_related('tags')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -36,6 +36,8 @@ class SinglePostView(FormMixin, DetailView):
         self.object.views = F('views') + 1
         self.object.save()
         self.object.refresh_from_db()
+        context['comments_count'] = Comment.objects.filter(post=Post.objects.select_related('author__userprofile').
+                                                           get(slug=self.kwargs['slug'])).count()
         context['comments'] = Comment.objects.exclude(status=Comment.AttrStatus.INVISIBLE). \
             select_related('post', 'user_submitter__userprofile', 'parent'). \
             filter(post=Post.objects.select_related('author__userprofile').get(slug=self.kwargs['slug']))
