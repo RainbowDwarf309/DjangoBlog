@@ -18,9 +18,14 @@
 			<div class="login100-form-title">
     	    	<h1>{% translate "You are a member" %}</h1>
 					<strong  class="txt1">{% translate "To register a new profile log out first" %}</strong>
-
 					<div>
-						<strong><a href="#" class="txt1">{% translate "Log out" %}</a></strong>
+						<strong>
+							<a href="{% url 'logout' %}" class="txt1">{% translate "Log out" %}</a>
+						</strong>
+						<small class="txt1"> {% translate "or" %}</small>
+						<strong>
+							<a href="{% url 'home' %}" class="txt1">{% translate "go home" %}</a>
+						</strong>
 					</div>
 			</div>
 		</div>
@@ -84,4 +89,8 @@
 	</div>
 
 {% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% include '_inc/_footer.html' %}
 {% endblock %}
