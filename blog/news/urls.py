@@ -16,4 +16,7 @@ urlpatterns = [
     path('profile/settings/', UserProfilePlatformView.as_view(), name='user_profile_settings'),
     path('search_posts/', SearchPostView.as_view(), name='search'),
     path('change_email/<uidb64>/<token>/', ActivateAccountView.as_view(), name='account_activation_confirm'),
+    path('change_email/', ChangeEmailView.as_view(), name='change_email'),
+    path('change_password/', UserPasswordChangeView.as_view(), name='change_password'),
+    path('password_change/done/', views.PasswordChangeDoneView.as_view(), name='password_change_done'),
 ]

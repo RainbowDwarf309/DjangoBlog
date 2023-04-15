@@ -3,9 +3,9 @@ from django.shortcuts import render, reverse
 from django.views.generic import CreateView, UpdateView, TemplateView, View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.http import Http404, HttpResponseRedirect
@@ -15,7 +15,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from .token import account_activation_token
 
-from .forms import UserRegistrationForm, UserProfileUpdateForm
+from .forms import UserRegistrationForm, UserProfileUpdateForm, EmailChangeForm
 from .models import UserProfile
 
 
@@ -74,6 +74,46 @@ class UserProfilePlatformView(UpdateView):
         if username is None:
             raise Http404
         return get_object_or_404(UserProfile, user__username__iexact=username)
+
+
+class UserPasswordChangeView(PasswordChangeView):
+    form_class = PasswordChangeForm
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+
+@method_decorator(login_required, name='dispatch')
+class ChangeEmailView(TemplateView):
+    model = User
+    template_name = 'registration/email_change.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        form = EmailChangeForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = EmailChangeForm(request.POST)
+        if form.is_valid():
+            user = self.request.user
+            new_email = form.cleaned_data['email']
+            User.objects.filter(username=user.username, email=user.email).update(email=new_email, is_active=False)
+            subject = 'Activate Your Account'
+            message = render_to_string('registration/account_activation_letter.html', {
+                'user': user,
+                'domain': request.get_host(),
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            messages.success(request, 'Please Confirm your email to complete registration.')
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [new_email], fail_silently=False)
+            return HttpResponseRedirect(reverse("login"))
+        else:
+            return self.form_invalid(form)
 
 
 class ActivateAccountView(View):

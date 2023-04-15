@@ -27,7 +27,7 @@ class UserRegistrationForm(UserCreationForm):
                                            'placeholder': '********'}))
     email = forms.EmailField(label='E-mail', max_length=50,
                              widget=forms.EmailInput(
-                                 attrs={'class': 'form-control', 'type': 'text', 'name': 'username',
+                                 attrs={'class': 'form-control', 'type': 'email', 'name': 'email',
                                         'placeholder': 'Email'}))
 
     class Meta:
@@ -132,3 +132,14 @@ class CommentSubmitForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         Comment.objects.rebuild()
         return super(CommentSubmitForm, self).save(*args, **kwargs)
+
+
+class EmailChangeForm(forms.ModelForm):
+    email = forms.EmailField(label='E-mail', max_length=50,
+                             widget=forms.EmailInput(
+                                 attrs={'class': 'form-control col-md-12', 'type': 'email',
+                                        'placeholder': 'Enter your new email...'}))
+
+    class Meta:
+        model = User
+        fields = ['email']
