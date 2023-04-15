@@ -71,7 +71,7 @@
                                         class="text-dark">Email:</strong> &nbsp;{{ user.email }}
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-primary">
+                            <a href="{% url 'change_email' %}" class="btn btn-primary">
                                 <i class="ti-email opacity-10"></i>
                                 {% translate "Change Email" %}
                             </a>
