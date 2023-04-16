@@ -48,9 +48,19 @@
                         <span class="px-2">·</span>
                         <span>{{ post.created_at|date:"M d Y" }}</span>
                         <span class="px-2">·</span>
-                        <span>Views: {{ post.views }}</span>
+                        <span><i class="ti-eye"></i> Views: {{ post.views }}</span>
                         <span class="px-2">·</span>
                         <a href="#" class="text-muted">{{comments_count}} Comments</a>
+                        <span class="px-2">·</span>
+                        <button class="btn circle btn-primary"
+                        onclick='javascript:setPostLikeOrDislike("{% url "ajax_post_like_dislike" %}", "{{ post.slug }}", "like", this)'>
+                            <i class="ti-thumb-up"></i>
+                        </button>
+                        <span id="rating" class="px-2">{{post.rating}}</span>
+                        <button class="btn circle btn-primary"
+                        onclick='javascript:setPostLikeOrDislike("{% url "ajax_post_like_dislike" %}", "{{ post.slug }}", "dislike", this)'>
+                            <i class="ti-thumb-down"></i>
+                        </button>
                         <span class="px-2">·</span>
                         <button class="btn circle {% if is_favorite %} btn-primary {% endif %}"
                                 data-toggle="popover" data-bs-placement="bottom"

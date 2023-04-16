@@ -87,6 +87,7 @@ class Post(models.Model):
                               verbose_name=_('Status'))
     likes = models.PositiveBigIntegerField(default=0)
     dislikes = models.PositiveBigIntegerField(default=0)
+    rating = models.IntegerField(default=0)
 
     def get_absolute_url(self):
         return reverse('post', kwargs={"slug": self.slug})
@@ -104,6 +105,14 @@ class Post(models.Model):
             self.slug = slugify(self.title)
         return super().save(*args, **kwargs)
 
+    def set_like_or_dislike(self, is_like: bool = False, is_dislike: bool = False) -> None:
+        if is_like:
+            self.likes += 1
+            self.rating += 1
+        elif is_dislike:
+            self.dislikes += 1
+            self.rating -= 1
+        self.save()
 
 class Comment(MPTTModel):
     class AttrStatus(models.TextChoices):
@@ -135,6 +144,15 @@ class Comment(MPTTModel):
 
     def __str__(self):
         return self.text
+
+    def set_like_or_dislike(self, is_like: bool = False, is_dislike: bool = False) -> None:
+        if is_like:
+            self.count_of_likes += 1
+            self.rating += 1
+        elif is_dislike:
+            self.count_of_dislikes += 1
+            self.rating -= 1
+        self.save()
 
 
 class Favorites(models.Model):
