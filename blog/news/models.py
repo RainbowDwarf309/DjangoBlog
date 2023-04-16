@@ -67,7 +67,6 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
-
     class AttrStatus(models.TextChoices):
         APPROVED = 'APPROVED'
         DELETED = 'DELETED'
@@ -136,3 +135,28 @@ class Comment(MPTTModel):
 
     def __str__(self):
         return self.text
+
+
+class Favorites(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='%(class)s',
+                             verbose_name=_('User'))
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def add_or_delete_favorite(cls, user, obj):
+        raise NotImplementedError('You must specify add_or_delete_favorite method')
+
+
+class FavoritePost(Favorites):
+    obj = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name=_('Post'))
+
+    def __str__(self):
+        return f'User:{self.user}, Favorite Post:{self.obj}'
+
+    @classmethod
+    def add_or_delete_favorite(cls, user, obj):
+        favorite, created = cls.objects.get_or_create(user=user, obj_id=obj.pk)
+        if not created:
+            favorite.delete()
