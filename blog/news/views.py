@@ -31,11 +31,17 @@ class SinglePostView(FormMixin, DetailView):
     context_object_name = 'post'
     form_class = CommentSubmitForm
 
+    def is_favorite(self) -> bool:
+        """if user is not anonymous, then checks post in favorite and returns True or False"""
+        if not self.request.user.is_anonymous:
+            return self.request.user.favoritepost.filter(obj=self.get_object()).exists()
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         self.object.views = F('views') + 1
         self.object.save()
         self.object.refresh_from_db()
+        context['is_favorite'] = self.is_favorite()
         context['comments_count'] = Comment.objects.filter(post=Post.objects.select_related('author__userprofile').
                                                            get(slug=self.kwargs['slug'])).count()
         context['comments'] = Comment.objects.exclude(status=Comment.AttrStatus.INVISIBLE). \
