@@ -1,14 +1,8 @@
-# from coupon_site import utils
-from news.models import Post
-from django.conf import settings
+from news.models import Post, Comment
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.http import JsonResponse
-from django.urls import reverse
-from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
-
-
 
 
 @login_required
@@ -40,3 +34,71 @@ def get_favorites_view_api(request, **kwargs):
             response = JsonResponse({'status': 'Successful', 'state': 'deleted'})
         response.status_code = 200
     return response
+
+
+@login_required
+def get_like_or_dislike_view_api(request):
+    slug = request.GET.get('slug', "")
+    action = request.GET.get('action', "")
+    try:
+        obj = Post.objects.get(slug=slug)
+        if action == 'like':
+            obj.set_like_or_dislike(is_like=True)
+            obj.save()
+            response = JsonResponse({'status': 'Successful', 'state': 'like', 'rate': obj.rating})
+            response.status_code = 200
+            return response
+        elif action == 'dislike':
+            obj.set_like_or_dislike(is_dislike=True)
+            obj.save()
+            response = JsonResponse({'status': 'Successful', 'state': 'dislike', 'rate': obj.rating})
+            response.status_code = 200
+            return response
+    except KeyError:
+        response = JsonResponse({'error': 'Please specify the correct object_model'})
+        response.status_code = 400
+    except ObjectDoesNotExist:
+        response = JsonResponse(
+            {'error': f"Object with slug:{slug!r} does not exist. Please specify the correct slug"})
+        response.status_code = 400
+    except Exception:
+        response = JsonResponse({'error': 'Unexpected error'})
+        response.status_code = 400
+    else:
+        response = JsonResponse({'status': 'Successful', 'state': 'You already set like or dislike'})
+        response.status_code = 200
+        return response
+
+
+@login_required
+def get_comment_like_or_dislike_view_api(request):
+    code_id = request.GET.get('code_id', "")
+    action = request.GET.get('action', "")
+    try:
+        obj = Comment.objects.get(pk=code_id)
+        if action == 'like':
+            obj.set_like_or_dislike(is_like=True)
+            obj.save()
+            response = JsonResponse({'status': 'Successful', 'state': 'like', 'rate': obj.rating})
+            response.status_code = 200
+            return response
+        elif action == 'dislike':
+            obj.set_like_or_dislike(is_dislike=True)
+            obj.save()
+            response = JsonResponse({'status': 'Successful', 'state': 'dislike', 'rate': obj.rating})
+            response.status_code = 200
+            return response
+    except KeyError:
+        response = JsonResponse({'error': 'Please specify the correct object_model'})
+        response.status_code = 400
+    except ObjectDoesNotExist:
+        response = JsonResponse(
+            {'error': f"Object with code_id:{code_id!r} does not exist. Please specify the correct code_id"})
+        response.status_code = 400
+    except Exception:
+        response = JsonResponse({'error': 'Unexpected error'})
+        response.status_code = 400
+    else:
+        response = JsonResponse({'status': 'Successful', 'state': 'You already set like or dislike'})
+        response.status_code = 200
+        return response
