@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 from django.contrib.auth import views
 
 from .views import *
@@ -19,4 +19,7 @@ urlpatterns = [
     path('change_email/', ChangeEmailView.as_view(), name='change_email'),
     path('change_password/', UserPasswordChangeView.as_view(), name='change_password'),
     path('password_change/done/', views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+
+    # API
+    path('ajax/', include('news.api.urls')),
 ]
