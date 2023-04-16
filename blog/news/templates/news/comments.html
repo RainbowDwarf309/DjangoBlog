@@ -23,6 +23,15 @@
             <a href="#a" onclick="$('#collapse-{{ node.pk }}').fadeIn(500);childComment({{node.pk}})"
                class="text-dark small font-weight-bold"><i class="ti-back-right"></i>
                 Replay</a>
+            <button class="btn circle"
+                    onclick='javascript:setCommentLikeOrDislike("{% url "ajax_comment_like_dislike" %}", "{{ node.pk }}", "like", this)'>
+                <i class="ti-thumb-up"></i>
+            </button>
+            <span id="rating-{{node.pk}}" class="px-2">{{node.rating}}</span>
+            <button class="btn circle"
+                    onclick='javascript:setCommentLikeOrDislike("{% url "ajax_comment_like_dislike" %}", "{{ node.pk }}", "dislike", this)'>
+                <i class="ti-thumb-down"></i>
+            </button>
             {% endif %}
             <div class="media mt-4">
                 {% if not node.is_leaf_node %}
