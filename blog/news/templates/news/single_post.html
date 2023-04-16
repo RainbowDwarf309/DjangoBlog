@@ -34,7 +34,7 @@
                     {% endfor %}
                     <br>
                     Category:<a href="{{ post.category.get_absolute_url }}"
-                                                   class="badge badge-primary m-1">{{post.category}}</a>
+                                class="badge badge-primary m-1">{{post.category}}</a>
                     <div class="blog-media mb-4">
                         <img src="{{ post.photo.url}}" alt="" class="w-100">
                         {% if post.tags.exists %}
@@ -51,6 +51,13 @@
                         <span>Views: {{ post.views }}</span>
                         <span class="px-2">·</span>
                         <a href="#" class="text-muted">{{comments_count}} Comments</a>
+                        <span class="px-2">·</span>
+                        <button class="btn circle {% if is_favorite %} btn-primary {% endif %}"
+                                data-toggle="popover" data-bs-placement="bottom"
+                                data-bs-content="Only authorized users can add stores to their favorites. Please sign in! <a class='btn_main text-center' href='#' id='log_in'>Log in!</a>"
+                                onclick='javascript:addToFavorite("{% url "ajax_favorite_post" %}", "{{ post.slug }}", this)'>
+                            <i class="ti-heart"></i>
+                        </button>
                     </small>
                 </div>
                 <div class="card-body border-top">
@@ -196,6 +203,7 @@
 {% block extend_scripts %}
 <script src="{% static 'assets/vendors/jquery/jquery-3.4.1.js' %}"></script>
 <script src="{% static 'assets/vendors/bootstrap/bootstrap.bundle.js' %}"></script>
+<script src="{% static 'assets/js/main_scripts.js' %}"></script>
 <script src="{% static 'assets/js/joeblog.js' %}"></script>
 <script>
 function formExit() {
@@ -229,7 +237,6 @@ function childComment(id) {
 }
 
 $('#myForm').trigger("reset");
-
 </script>
 {% endblock %}
 </body>
