@@ -13,102 +13,137 @@
     <!-- End Navbar -->
     <div class="container-fluid px-2 px-md-4">
         <div class="page-header min-height-300 border-radius-xl mt-4">
-        <span class="mask  bg-gradient-primary  opacity-4"></span>
-    </div>
-    <div class="card card-body mx-3 mx-md-4 mt-n6">
-        <div class="row gx-4 mb-2">
-            <div class="col-auto">
-                <div class="avatar avatar-xl position-relative">
-                    <img src="{{ user.userprofile.avatar.url }}" alt="profile_image"
-                         class="w-100 border-radius-lg shadow-sm">
-                </div>
-            </div>
-            <div class="col-auto my-auto">
-                <div class="h-100">
-                    <h5 class="mb-1">
-                        {{ user }}
-                    </h5>
-                    <p class="mb-0 font-weight-normal text-sm">
-                        {{ user.email }}
-                    </p>
-                </div>
-            </div>
-
+            <span class="mask  bg-gradient-primary  opacity-4"></span>
         </div>
-        <div class="row">
+        <div class="card card-body mx-3 mx-md-4 mt-n6">
+            <div class="row gx-4 mb-2">
+                <div class="col-auto">
+                    <div class="avatar avatar-xl position-relative">
+                        <img src="{{ user.userprofile.avatar.url }}" alt="profile_image"
+                             class="w-100 border-radius-lg shadow-sm">
+                    </div>
+                </div>
+                <div class="col-auto my-auto">
+                    <div class="h-100">
+                        <h5 class="mb-1">
+                            {{ user }}
+                        </h5>
+                        <p class="mb-0 font-weight-normal text-sm">
+                            {{ user.email }}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
             <div class="row">
-                <div class="col-12 col-xl-4">
-                    <div class="card card-plain h-100">
+                <div class="row">
+                    <div class="col-12 col-xl-4">
+                        <div class="card card-plain h-100">
+                            <div class="card-header pb-0 p-3">
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-center">
+                                        <h6 class="mb-0">{% translate "Profile Information" %}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-3">
+                                <p class="text-sm">
+                                    {{ user.userprofile.bio }}
+                                </p>
+                                <hr class="horizontal gray-light my-4">
+                                <ul class="list-group">
+                                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">
+                                        {% translate "First name" %}:</strong> &nbsp;
+                                        {% if user.userprofile.first_name %}
+                                        {{ user.userprofile.first_name }}
+                                        {% else %}{% translate "Not specified" %}
+                                        {% endif %}
+                                    </li>
+                                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">
+                                        {% translate "Last name" %}:</strong> &nbsp;
+                                        {% if user.userprofile.last_name %}
+                                        {{ user.userprofile.last_name }}
+                                        {% else %}
+                                        {% translate "Not specified" %}
+                                        {% endif %}
+                                    </li>
+                                    <li class="list-group-item border-0 ps-0 text-sm"><strong
+                                            class="text-dark">Email:</strong> &nbsp;{{ user.email }}
+                                    </li>
+                                </ul>
+                                <a href="{% url 'change_email' %}" class="btn btn-primary">
+                                    <i class="ti-email opacity-10"></i>
+                                    {% translate "Change Email" %}
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-4">
                         <div class="card-header pb-0 p-3">
-                            <div class="row">
-                                <div class="col-md-4 d-flex align-items-center">
-                                    <h6 class="mb-0">{% translate "Profile Information" %}</h6>
+                            <h6 class="mb-0">{% translate "Newsletter Subscription" %}</h6>
+                        </div>
+                        <div class="card-body p-3">
+                            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                                {{ sub_form.user }}
+                                {{ sub_form.email }}
+                                <div style="color:red;">
+                                    {{ sub_form.email.errors }}
+                                </div>
+                                <br>
+                                <ul class="list-inline">
+                                    {% for choice in sub_form.choices %}
+                                    <li class="toggle">{{choice.tag}}
+                                        <label class="toggle">{{choice.choice_label}}</label>
+                                    </li>
+
+                                    {% endfor %}
+                                </ul>
+                                {% if not request.user.user_newsletter_subscriber.first.is_subscribed %}
+                                <button type="submit" name="subscribe-sub-form" class="btn bg-gradient-primary">
+                                    {% translate "Subscribe" %}
+                                </button>
+                                {% else %}
+                                <button type="submit" name="unsubscribe-sub-form" class="btn bg-gradient-primary">
+                                    {% translate "Unsubscribe" %}
+                                </button>
+                                <button disabled type="submit" name="subscribe-sub-form" class="btn bg-gradient-primary"
+                                        id="newsletter-save">{% translate "Save changes" %}
+                                </button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="col-12">
+                        <div class="card card-plain h-100">
+                            <div class="card-header pb-0 p-3">
+                                <h6 class="mb-0">{% translate "Edit profile" %}</h6>
+                            </div>
+                            <div style="">
+                                <div class="col-md-12 pb-0 p-3">
+                                    <form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{ form.as_p}}
+                                        <div>
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                                                {% translate "Close" %}
+                                            </button>
+                                            <button type="submit" name="profile-form" class="btn btn-primary">
+                                                {% translate "Save changes" %}
+                                            </button>
+                                        </div>
+
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body p-3">
-                            <p class="text-sm">
-                                {{ user.userprofile.bio }}
-                            </p>
-                            <hr class="horizontal gray-light my-4">
-                            <ul class="list-group">
-                                <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">
-                                    {% translate "First name" %}:</strong> &nbsp;
-                                    {% if user.userprofile.first_name %}
-                                    {{ user.userprofile.first_name }}
-                                    {% else %}{% translate "Not specified" %}
-                                    {% endif %}
-                                </li>
-                                <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">
-                                    {% translate "Last name" %}:</strong> &nbsp;
-                                    {% if user.userprofile.last_name %}
-                                    {{ user.userprofile.last_name }}
-                                    {% else %}
-                                    {% translate "Not specified" %}
-                                    {% endif %}
-                                </li>
-                                <li class="list-group-item border-0 ps-0 text-sm"><strong
-                                        class="text-dark">Email:</strong> &nbsp;{{ user.email }}
-                                </li>
-                            </ul>
-                            <a href="{% url 'change_email' %}" class="btn btn-primary">
-                                <i class="ti-email opacity-10"></i>
-                                {% translate "Change Email" %}
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-                <hr>
-                <div class="col-12">
-                    <div class="card card-plain h-100">
-                        <div class="card-header pb-0 p-3">
-                            <h6 class="mb-0">{% translate "Edit profile" %}</h6>
-                        </div>
-                        <div style="">
-                            <div class="col-md-12 pb-0 p-3">
-                                <form method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {{ form.as_p}}
-                                    <div>
-                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                                            {% translate "Close" %}
-                                        </button>
-                                        <button type="submit" name="profile-form" class="btn btn-primary">
-                                            {% translate "Save changes" %}
-                                        </button>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% include "_inc/_user_profile_footer.html" %}
+    {% include "_inc/_user_profile_footer.html" %}
 </div>
 {{ block.super }}
 </body>

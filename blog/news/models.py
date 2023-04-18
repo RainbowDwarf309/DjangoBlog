@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     avatar = models.ImageField(upload_to='photos/avatars/%Y/%m/%d/', verbose_name='User avatar', blank=False,
                                default='photos/default_user_avatar.png',
                                help_text=_('Only .png format. Less than 0.5mb.'))
-    bio = models.TextField(blank=True, max_length=200, verbose_name=_('information'))
+    bio = models.TextField(blank=True, max_length=500, verbose_name=_('information'))
     first_name = models.CharField(max_length=60, blank=True, null=True)
     last_name = models.CharField(max_length=60, blank=True, null=True)
     email = models.EmailField(max_length=100, blank=True, null=True)
@@ -114,6 +114,7 @@ class Post(models.Model):
             self.rating -= 1
         self.save()
 
+
 class Comment(MPTTModel):
     class AttrStatus(models.TextChoices):
         VISIBLE = 'VISIBLE'
@@ -178,3 +179,30 @@ class FavoritePost(Favorites):
         favorite, created = cls.objects.get_or_create(user=user, obj_id=obj.pk)
         if not created:
             favorite.delete()
+
+
+class NewsType(models.Model):
+    type_of_news: str = models.CharField(max_length=100, verbose_name=_('News type'))
+
+    class Meta:
+        verbose_name = _('News Type')
+        verbose_name_plural = _('News Types')
+
+    def __str__(self):
+        return f'{self.type_of_news}'
+
+
+class Newsletter(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user_newsletter_subscriber', null=True,
+                             blank=True, verbose_name=_('User'))
+    is_subscribed = models.BooleanField(default=False, verbose_name='Is user subscribed?')
+    email = models.EmailField(max_length=150, unique=True, null=True)
+    choices = models.ManyToManyField(NewsType, blank=True, verbose_name=_('News choice'))
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _('Newsletter')
+        verbose_name_plural = _('Newsletters')
+
+    def __str__(self):
+        return f'User:{self.user}, Email: {self.email}, Subscribed: {self.is_subscribed}, Type of news: {self.choices}'

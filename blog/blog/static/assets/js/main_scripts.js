@@ -97,3 +97,8 @@ function setCommentLikeOrDislike(url, code_id, action, element) {
         }
     })
 }
+
+function changeNewsletterForm(element_id) {
+  const changedElement = document.getElementById(element_id).value;
+  document.getElementById("newsletter-save").disabled = false;
+}
