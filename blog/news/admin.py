@@ -65,8 +65,22 @@ class UserProfileAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('user', 'email', 'is_subscribed', 'date')
+    search_fields = ('user__username', 'user__email')
+    filter_horizontal = ('choices',)
+    view_on_site = False
+
+
+class NewsTypeAdmin(admin.ModelAdmin):
+    list_display = ('type_of_news',)
+    view_on_site = False
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Newsletter, NewsletterAdmin)
+admin.site.register(NewsType, NewsTypeAdmin)
