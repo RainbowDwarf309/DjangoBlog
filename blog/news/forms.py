@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import re
-from .models import Comment, UserProfile, Post
+from .models import Comment, UserProfile, Post, Newsletter
 from mptt.forms import TreeNodeChoiceField
 
 
@@ -143,3 +143,32 @@ class EmailChangeForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email']
+
+
+class NewsletterForm(forms.ModelForm):
+    class Meta:
+        model = Newsletter
+        fields = ['user', 'email', 'choices']
+        widgets = {
+            'user': forms.HiddenInput(),
+            'email': forms.EmailInput(
+                attrs={
+                    'class': 'form-control',
+                    'oninput': 'changeNewsletterForm("id_email");',
+                    'placeholder': _('Enter your email...'),
+                }),
+            'choices': forms.CheckboxSelectMultiple(
+                attrs={
+                    'class': 'toggle-button',
+                    'onchange': 'changeNewsletterForm(this.id);',
+                }),
+        }
+        labels = {'choices': '', 'font-size': '13px',}
+
+    def clean_email(self):
+        cd = self.cleaned_data
+        if Newsletter.objects.exclude(user=cd.get('user')).filter(email=cd.get('email')).exists():
+            message = _('User with this email already exists')
+            raise ValidationError(message)
+        else:
+            return cd['email']
