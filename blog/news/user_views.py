@@ -15,8 +15,8 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from .token import account_activation_token
 
-from .forms import UserRegistrationForm, UserProfileUpdateForm, EmailChangeForm
-from .models import UserProfile
+from .forms import UserRegistrationForm, UserProfileUpdateForm, EmailChangeForm, NewsletterForm
+from .models import UserProfile, Newsletter
 
 
 class SignUpView(CreateView):
@@ -64,16 +64,57 @@ class UserLoginView(LoginView):
 class UserProfilePlatformView(UpdateView):
     model = User
     form_class = UserProfileUpdateForm
+    second_form_class = NewsletterForm
     template_name = 'news/user_profile_platform.html'
 
     def get_success_url(self):
         return self.request.path
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserProfilePlatformView, self).get_context_data(**kwargs)
+        user = self.request.user
+        email = self.request.user.email
+        subscriber, created = Newsletter.objects.get_or_create(user=user)
+        choices = subscriber.choices.all()
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        if 'sub_form' not in context:
+            context['sub_form'] = self.second_form_class(initial={'user': user, 'email': email, 'choices': choices})
+        return context
+
+    def form_invalid(self, **kwargs):
+        return self.render_to_response(self.get_context_data(**kwargs))
 
     def get_object(self, **kwargs):
         username = self.request.user.username
         if username is None:
             raise Http404
         return get_object_or_404(UserProfile, user__username__iexact=username)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        user = self.request.user
+        email = self.request.user.email
+        instance = Newsletter.objects.get(user=user)
+        if 'profile-form' in request.POST:
+            form_class = self.get_form_class()
+            form_name = 'form'
+        elif 'unsubscribe-sub-form' in request.POST:
+            Newsletter.objects.filter(user=user, email=email).update(email=None, is_subscribed=False)
+            instance.choices.clear()
+            form_class = self.second_form_class
+            form_name = 'sub_form'
+        else:
+            Newsletter.objects.filter(user=user).update(is_subscribed=True)
+            subscriber, created = Newsletter.objects.get_or_create(user=user)
+            self.object = subscriber
+            form_class = self.second_form_class
+            form_name = 'sub_form'
+        form = self.get_form(form_class)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(**{form_name: form})
 
 
 class UserPasswordChangeView(PasswordChangeView):
