@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import slugify
 from PIL import Image
 from mptt.models import MPTTModel, TreeForeignKey
+from django.core.validators import validate_ipv46_address
 
 
 class UserProfile(models.Model):
@@ -206,3 +207,92 @@ class Newsletter(models.Model):
 
     def __str__(self):
         return f'User:{self.user}, Email: {self.email}, Subscribed: {self.is_subscribed}, Type of news: {self.choices}'
+
+
+class ActionTrack(models.Model):
+    class AttrUserStatus(models.TextChoices):
+        POST_PUBLISHER = 'Post publisher'
+        JUST_USER = 'Just user'
+        STAFF = 'Staff'
+        ANONYMOUS = 'Anonymous'
+
+    class AttrPage(models.TextChoices):
+        # Reviews
+
+        # Main pages
+        PAGE_INDEX = 'Main(Index) page'
+        PAGE_COMMUNITY = 'Community page'
+
+        # Form pages
+        POST_PROFILE = 'Post profile(with comments) page'
+        POST_SUBMIT = 'Post submit page'
+
+        # Profile pages
+        USER_PROFILE = 'User profile page'
+        USER_PROFILE_SUMMARY = 'User profile summary page'
+        USER_PROFILE_PUBLICATIONS = 'User profile publications page'
+        USER_PROFILE_PLATFORM = 'User profile platform page'
+        LOGIN = 'Login page'
+        REGISTRATION = 'Registration page'
+        RESET_PASSWORD = 'Password reset view'
+        CHANGE_PASSWORD = 'Password change view'
+
+        # Other
+        API_POST = 'Post API'
+        API_COMMENT_RATING = 'Comment API rating'
+        POST_DELETED = 'Post status -> DELETED'
+        API_FAVORITE = 'Favorite API'
+        API_LIKE_DISLIKE = 'Like/Dislike API'
+        KARMA = 'Karma'
+
+    class AttrAction(models.TextChoices):
+        VIEW = 'View'  # using into CBV
+        GO_TO = 'Redirect'
+        GET_OBJECT = 'Get object'
+
+        SUBMIT_POST = 'Submit post'
+
+        POST_VIEW = 'View post'
+        POST_RATING_PLUS = 'Post rating plus 1'
+        POST_RATING_MINUS = 'Post rating minus 1'
+
+        COMMENT_RATING_PLUS = 'Comment rating liked'
+        COMMENT_RATING_MINUS = 'Comment rating disliked'
+        CREATE_NEW_CHILD_COMMENT = 'Create new child comment'
+
+    class AttrReason(models.TextChoices):
+        OBJECT_NOT_EXIST = 'Object not exist'
+        HAVENT_PERMISSIONS = 'Haven\'t permissions'
+        OBJECT_STATUS_ONLY_OWNER = 'Only owner can view (Object status) status'
+        FORM_INVALID = 'Form invalid'
+
+        OBJECT_SUBMIT_SPAM = 'Object submit spam'
+
+        POST_ALREADY_VIEWED = 'Coupon views change unsuccessfully. Already viewed'
+        POST_RATING_ALREADY_CHANGED = 'Coupon rating change unsuccessfully. Already changed'
+
+        COMMENT_RATING_ALREADY_CHANGED = 'Comment rating change unsuccessfully. Already changed'
+
+    date = models.DateTimeField(auto_now_add=True, verbose_name=_('Date of action'))
+    ip = models.GenericIPAddressField(protocol='both', unpack_ipv4=True, null=True, blank=None,
+                                      validators=[validate_ipv46_address], verbose_name=_('Ip'))
+    user = models.ForeignKey(User, null=True, default=None, on_delete=models.SET_NULL, related_name='User',
+                             verbose_name=_('User'))
+    user_status = models.CharField(max_length=40, choices=AttrUserStatus.choices, verbose_name=_('User status'))
+    page = models.CharField(max_length=100, choices=AttrPage.choices, verbose_name=_('Page'))
+    page_url = models.URLField(max_length=500, verbose_name=_('Page URL'))
+    action = models.CharField(max_length=100, choices=AttrAction.choices, verbose_name=_('Action'))
+    action_reason = models.CharField(max_length=100, null=True, choices=AttrReason.choices, verbose_name=_('Reason'))
+    details = models.TextField(null=True, blank=True, verbose_name=_('Details'))
+
+    http_referer = models.TextField(null=True, verbose_name=_('Referer'))
+    session_key = models.TextField(null=True, verbose_name=_('Session key'))
+    user_agent = models.TextField(null=True, verbose_name=_('User agent'))
+
+    def __str__(self):
+        return f'Action id:{self.pk}, at: {self.date}, user_status={self.user_status}, {self.action} on {self.page},' \
+               f' reason={self.action_reason}, ' \
+               f'details={self.details}'
+
+    def save(self, *args, **kwargs):
+        super(ActionTrack, self).save(*args, **kwargs)
