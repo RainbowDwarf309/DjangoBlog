@@ -4,7 +4,7 @@
 
 <div class="card-footer">
     {% if post.comments.exists %}
-    <h6 class="mt-5 mb-3 text-center"><a href="#" class="text-dark">Comments {{comments_count}}</a></h6>
+    <h6 class="mt-5 mb-3 text-center text-dark">Comments {{comments_count}}</h6>
     {% endif %}
     <hr>
     {% recursetree comments %}
@@ -23,12 +23,12 @@
             <a href="#a" onclick="$('#collapse-{{ node.pk }}').fadeIn(500);childComment({{node.pk}})"
                class="text-dark small font-weight-bold"><i class="ti-back-right"></i>
                 Replay</a>
-            <button class="btn circle"
+            <button class="btn circle" id="comment-like-{{node.pk}}"
                     onclick='javascript:setCommentLikeOrDislike("{% url "ajax_comment_like_dislike" %}", "{{ node.pk }}", "like", this)'>
                 <i class="ti-thumb-up"></i>
             </button>
             <span id="rating-{{node.pk}}" class="px-2">{{node.rating}}</span>
-            <button class="btn circle"
+            <button class="btn circle" id="comment-dislike-{{node.pk}}"
                     onclick='javascript:setCommentLikeOrDislike("{% url "ajax_comment_like_dislike" %}", "{{ node.pk }}", "dislike", this)'>
                 <i class="ti-thumb-down"></i>
             </button>

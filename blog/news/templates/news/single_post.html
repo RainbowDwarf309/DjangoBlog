@@ -48,26 +48,24 @@
                         <span class="px-2">·</span>
                         <span>{{ post.created_at|date:"M d Y" }}</span>
                         <span class="px-2">·</span>
-                        <span><i class="ti-eye"></i> Views: {{ post.views }}</span>
+                        <span id="views"><i class="ti-eye"></i> Views: {{ post.views }}</span>
                         <span class="px-2">·</span>
                         <a href="#" class="text-muted">{{comments_count}} Comments</a>
                         <span class="px-2">·</span>
-                        <button class="btn circle btn-primary"
-                        onclick='javascript:setPostLikeOrDislike("{% url "ajax_post_like_dislike" %}", "{{ post.slug }}", "like", this)'>
+                        <a class="btn circle btn-primary" id="like-post" role="button" tabindex="0"
+                                onclick='javascript:setPostLikeOrDislike("{% url "ajax_post_like_dislike" %}", "{{ post.slug }}", "like", this)'>
                             <i class="ti-thumb-up"></i>
-                        </button>
+                        </a>
                         <span id="rating" class="px-2">{{post.rating}}</span>
-                        <button class="btn circle btn-primary"
-                        onclick='javascript:setPostLikeOrDislike("{% url "ajax_post_like_dislike" %}", "{{ post.slug }}", "dislike", this)'>
+                        <a class="btn circle btn-primary" id="dislike-post" role="button" tabindex="0"
+                                onclick='javascript:setPostLikeOrDislike("{% url "ajax_post_like_dislike" %}", "{{ post.slug }}", "dislike", this)'>
                             <i class="ti-thumb-down"></i>
-                        </button>
+                        </a>
                         <span class="px-2">·</span>
-                        <button class="btn circle {% if is_favorite %} btn-primary {% endif %}"
-                                data-toggle="popover" data-bs-placement="bottom"
-                                data-bs-content="Only authorized users can add stores to their favorites. Please sign in! <a class='btn_main text-center' href='#' id='log_in'>Log in!</a>"
-                                onclick='javascript:addToFavorite("{% url "ajax_favorite_post" %}", "{{ post.slug }}", this)'>
-                            <i class="ti-heart"></i>
-                        </button>
+                        <a class="btn circle {% if is_favorite %} btn-primary {% endif %}" id="heart" role="button"
+                           onclick='javascript:addToFavorite("{% url "ajax_favorite_post" %}", "{{ post.slug }}", this)'>
+                           <i class="ti-heart"></i>
+                        </a>
                     </small>
                 </div>
                 <div class="card-body border-top">
@@ -216,6 +214,9 @@
 <script src="{% static 'assets/js/main_scripts.js' %}"></script>
 <script src="{% static 'assets/js/joeblog.js' %}"></script>
 <script>
+    window.onload = updatePostViews('{% url 'ajax_post' %}', {{post.pk}}, 'viewed');
+</script>
+<script>
 function formExit() {
    document.getElementById("myGroup").remove();
 }
@@ -247,6 +248,7 @@ function childComment(id) {
 }
 
 $('#myForm').trigger("reset");
+
 </script>
 {% endblock %}
 </body>
