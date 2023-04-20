@@ -20,12 +20,13 @@ class PostAdmin(admin.ModelAdmin):
     # form = PostAdminForm
     save_as = True
     save_on_top = True
-    list_display = ('id', 'title', 'slug', 'author', 'category', 'created_at', 'get_photo', 'views')
+    list_display = ('id', 'title', 'status', 'slug', 'author', 'category', 'created_at', 'get_photo', 'views')
     list_display_links = ('id', 'title')
     search_fields = ('title',)
     list_filter = ('category', 'tags')
     readonly_fields = ('views', 'created_at', 'get_photo')
     fields = ('title', 'slug', 'category', 'tags', 'content', 'author', 'photo', 'get_photo', 'views', 'created_at')
+    list_editable = ('status',)
 
     def get_photo(self, obj):
         if obj.photo:
@@ -77,6 +78,18 @@ class NewsTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+class ActionTrackAdmin(admin.ModelAdmin):
+    list_display = ('date', 'ip', 'user', 'user_status', 'page', 'page_url', 'action', 'action_reason', "details",
+                    'http_referer', "session_key", 'user_agent')
+    list_display_links = ('date',)
+    search_fields = ('ip', 'user__username', 'action_reason', 'details', "session_key", 'http_referer', 'user_agent')
+
+    list_filter = ('page', 'action', 'action_reason', 'user_status')
+    date_hierarchy = 'date'
+
+    view_on_site = False
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Post, PostAdmin)
@@ -84,3 +97,4 @@ admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Newsletter, NewsletterAdmin)
 admin.site.register(NewsType, NewsTypeAdmin)
+admin.site.register(ActionTrack, ActionTrackAdmin)
