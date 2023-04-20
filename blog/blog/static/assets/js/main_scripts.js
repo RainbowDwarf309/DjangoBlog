@@ -1,6 +1,34 @@
-function addToFavorite(url, slug, element) {
+function updatePostViews(url, code_id, action) {
     $.ajax({
         url: url,
+        type: "get",
+        data : {
+            "code_id": code_id,
+            "action": action
+        },
+        dataType: "json",
+        success: function (data, textStatus, response) {
+            if (response.responseJSON) {
+                if (data.state === "viewed") {
+                    post_views = document.getElementById("views")
+                    post_views.innerHTML = '<i class="ti-eye"></i> Views: ' + data.views
+                }
+            }
+        },
+        error: function(response, textStatus, errorThrown) {
+            alert("");
+            console.log(response)
+            console.log(textStatus)
+            console.log(errorThrown)
+        }
+    })
+}
+
+
+function addToFavorite(url, slug, element) {
+    let host = window.location.protocol + "//" + window.location.host
+    $.ajax({
+        url: host + url,
         type: "get",
         data : {
             "slug": slug
@@ -18,17 +46,15 @@ function addToFavorite(url, slug, element) {
                     $(element).removeClass("btn-primary")
                 }
             }
-//            else{
-//
-//                let popoverTriggerList = [].slice.call(document.querySelector(`[id="${String(element.id)}"`))
-//                let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-//                return new bootstrap.Popover(popoverTriggerEl)})
-//                $(`[id="${String(element.id)}"]`).popover({html:true})
-//                $(`[id="${String(element.id)}"]`).popover("show")
-//            }
+            else{
+                $('#heart').popover({
+                placement: 'right',
+                content: "Only authorized users can add posts to their favorites. Please sign in!",
+                trigger: 'hover'
+                })
+            }
         },
         error: function(response, textStatus, errorThrown) {
-            alert("Sign in to add to favorite any post");
             console.log(response)
             console.log(textStatus)
             console.log(errorThrown)
@@ -45,7 +71,6 @@ function setPostLikeOrDislike(url, slug, action, element) {
             "slug": slug,
             "action": action
         },
-        dataType: "json",
         success: function (data, textStatus, response) {
             if (response.responseJSON) {
                 if (data.state === "like") {
@@ -57,9 +82,20 @@ function setPostLikeOrDislike(url, slug, action, element) {
                     post_rate.innerHTML = data.rate
                 }
             }
+            else{
+                $('#like-post').popover({
+                placement: 'right',
+                content: "Only authorized users can set likes to posts. Please sign in!",
+                trigger: 'hover'
+                })
+                $('#dislike-post').popover({
+                placement: 'right',
+                content: "Only authorized users can set dislikes to posts. Please sign in!",
+                trigger: 'hover'
+                })
+            }
         },
         error: function(response, textStatus, errorThrown) {
-            alert("Sign in to set like or dislike");
             console.log(response)
             console.log(textStatus)
             console.log(errorThrown)
@@ -76,7 +112,6 @@ function setCommentLikeOrDislike(url, code_id, action, element) {
             "code_id": code_id,
             "action": action
         },
-        dataType: "json",
         success: function (data, textStatus, response) {
             if (response.responseJSON) {
                 if (data.state === "like") {
@@ -88,9 +123,20 @@ function setCommentLikeOrDislike(url, code_id, action, element) {
                     post_rate.innerHTML = data.rate
                 }
             }
+            else{
+                $('#comment-like-' + code_id).popover({
+                placement: 'right',
+                content: "Only authorized users can set likes to comments. Please sign in!",
+                trigger: 'hover'
+                })
+                $('#comment-dislike-' + code_id).popover({
+                placement: 'right',
+                content: "Only authorized users can set dislikes to comments. Please sign in!",
+                trigger: 'hover'
+                })
+            }
         },
         error: function(response, textStatus, errorThrown) {
-            alert("Sign in to set like or dislike");
             console.log(response)
             console.log(textStatus)
             console.log(errorThrown)
