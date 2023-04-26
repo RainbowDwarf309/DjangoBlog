@@ -11,3 +11,6 @@ Python 3.10.0 +
     alter role user_name_blog set default_transaction_isolation to 'read committed';
     alter role user_name_blog set timezone to 'UTC';
     ALTER USER user_name_blog CREATEDB;
+
+    pip3 install -r blog/requirements/config
+    Где config необходимый конфиг.
