@@ -1,0 +1,10 @@
+asgiref==3.6.0
+Django==4.1.7
+django_debug_toolbar==3.8.1
+django-mptt==0.14.0
+tblib==1.7.0
+six==1.16.0
+Pillow==9.4.0
+psycopg2==2.9.5
+python-dotenv==1.0.0
+
