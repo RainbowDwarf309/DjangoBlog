@@ -47,6 +47,8 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         created = not self.pk
         super().save(*args, **kwargs)
+        if not self.slug:
+            self.slug = slugify(self.title)
         if created:
             Tag.objects.create(title=str(self.title).lower(), slug=self.slug)
 
@@ -65,6 +67,12 @@ class Tag(models.Model):
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
         ordering = ['title']
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.title = str(self.title).lower()
+        if not self.slug:
+            self.slug = slugify(self.title)
 
 
 class Post(models.Model):
@@ -155,6 +163,16 @@ class Comment(MPTTModel):
             self.count_of_dislikes += 1
             self.rating -= 1
         self.save()
+
+    def hide_comment(self) -> None:
+        if self.status != self.AttrStatus.INVISIBLE:
+            self.status = self.AttrStatus.INVISIBLE
+            self.save()
+
+    def delete_comment(self) -> None:
+        if self.status != self.AttrStatus.DELETED:
+            self.status = self.AttrStatus.DELETED
+            self.save()
 
 
 class Favorites(models.Model):
