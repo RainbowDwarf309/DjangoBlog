@@ -1,13 +1,12 @@
 from django.contrib.auth.models import User
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
-import json
 
 from news.models import (
     Post,
     Category,
-    Comment,
-    FavoritePost
+    ActionTrack
 )
 
 from services.functions import (
@@ -88,3 +87,60 @@ class GetCouponFromSlugTest(TestCase):
     def test_not_slug(self):
         my_class = MyTestClass(kwargs={'another-slug': self.post.slug})
         self.assertEqual(get_post_from_slug(my_class, slug='another-slug'), self.post)
+
+
+class TrackActionTest(TestCase):
+    def setUp(self) -> None:
+        self.request = self.client.get(reverse('home')).wsgi_request
+
+    def test_track_action(self):
+        track_action(request=self.request,
+                     page=ActionTrack.AttrPage.PAGE_INDEX,
+                     action=ActionTrack.AttrAction.VIEW,
+                     details='some details',
+                     action_reason=ActionTrack.AttrReason.OBJECT_NOT_EXIST)
+        self.assertEqual(ActionTrack.objects.last().page, ActionTrack.AttrPage.PAGE_INDEX)
+        self.assertEqual(ActionTrack.objects.last().action, ActionTrack.AttrAction.VIEW)
+        self.assertEqual(ActionTrack.objects.last().details, 'some details')
+        self.assertEqual(ActionTrack.objects.last().action_reason, ActionTrack.AttrReason.OBJECT_NOT_EXIST)
+        self.assertEqual(ActionTrack.objects.last().action_reason, ActionTrack.AttrReason.OBJECT_NOT_EXIST)
+        self.assertEqual(ActionTrack.objects.last().ip, get_client_ip(self.request))
+        self.assertEqual(ActionTrack.objects.last().http_referer, get_param_from_request(self.request, 'HTTP_REFERER'))
+        self.assertEqual(ActionTrack.objects.last().session_key, get_session_key(self.request))
+        self.assertEqual(ActionTrack.objects.last().user_agent, get_param_from_request(self.request, 'HTTP_USER_AGENT'))
+
+    def test_user_status_anonymous(self):
+        track_action(request=self.request,
+                     page=ActionTrack.AttrPage.PAGE_INDEX,
+                     action=ActionTrack.AttrAction.VIEW,
+                     details='some details',
+                     action_reason=ActionTrack.AttrReason.OBJECT_NOT_EXIST)
+
+        self.assertEqual(ActionTrack.objects.last().user_status, ActionTrack.AttrUserStatus.ANONYMOUS)
+
+    def test_user_status_just_user(self):
+        client = Client()
+        client.force_login(User.objects.get_or_create(username='testuser1')[0])
+        request = client.get(reverse('home')).wsgi_request
+
+        track_action(request=request,
+                     page=ActionTrack.AttrPage.PAGE_INDEX,
+                     action=ActionTrack.AttrAction.VIEW,
+                     details='some details',
+                     action_reason=ActionTrack.AttrReason.OBJECT_NOT_EXIST)
+
+        self.assertEqual(ActionTrack.objects.last().user_status, ActionTrack.AttrUserStatus.JUST_USER)
+
+    def test_user_status_staff(self):
+        client = Client()
+        client.force_login(User.objects.get_or_create(username='testuser1', is_staff=True)[0])
+
+        request = client.get(reverse('home')).wsgi_request
+
+        track_action(request=request,
+                     page=ActionTrack.AttrPage.PAGE_INDEX,
+                     action=ActionTrack.AttrAction.VIEW,
+                     details='some details',
+                     action_reason=ActionTrack.AttrReason.OBJECT_NOT_EXIST)
+
+        self.assertEqual(ActionTrack.objects.last().user_status, ActionTrack.AttrUserStatus.STAFF)
