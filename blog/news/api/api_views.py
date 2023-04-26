@@ -49,13 +49,9 @@ def get_post_view_api(request: HttpRequest) -> JsonResponse:
         return response
     else:
         if action == 'viewed' and not user_changed_utility:
-            post_viewed(request, post, post_id, action, user_post_already_viewed_today)
+            return post_viewed(request, post, post_id, action, user_post_already_viewed_today)
         else:
             return post_change_rating(request, post, post_id, action, user_changed_utility)
-        response = JsonResponse({'rate': post.rating, 'views': post.views, 'state': 'viewed'})
-        logger.debug(f'Block get_post_view_api. Return response{response}, from ip={get_client_ip(request)}')
-        response.status_code = 200
-        return response
 
 
 @login_required
@@ -130,19 +126,19 @@ def get_post_like_or_dislike_view_api(request: HttpRequest) -> JsonResponse:
                                      'error': 'You already set like or dislike.'})
             response.status_code = 200
             return response
-    except KeyError:
-        response = JsonResponse({'error': 'Please specify the correct object_model'})
-        response.status_code = 400
     except ObjectDoesNotExist:
         response = JsonResponse(
             {'error': f"Object with slug:{slug!r} does not exist. Please specify the correct slug"})
         response.status_code = 400
+        return response
     except Exception:
         response = JsonResponse({'error': 'Unexpected error'})
         response.status_code = 400
+        return response
     else:
         response = JsonResponse({'error': 'Unexpected action.'})
         response.status_code = 400
+        return response
 
 
 @login_required
@@ -150,7 +146,8 @@ def get_comment_like_or_dislike_view_api(request: HttpRequest) -> JsonResponse:
     code_id = request.GET.get('code_id', "")
     action = request.GET.get('action', "")
     try:
-        obj = Comment.objects.get(pk=code_id)
+        object_pk = check_object_id(code_id)
+        obj = Comment.objects.get(pk=object_pk)
         user_changed_utility = ActionTrack.objects.filter(details=f'ip={get_client_ip(request)}, '
                                                                   f'code_id={obj.pk}, u')
         if obj.status != Comment.AttrStatus.VISIBLE:
@@ -183,16 +180,16 @@ def get_comment_like_or_dislike_view_api(request: HttpRequest) -> JsonResponse:
             response = JsonResponse({'rate': obj.rating, 'error': 'You already set like or dislike.'})
             response.status_code = 200
             return response
-    except KeyError:
-        response = JsonResponse({'error': 'Please specify the correct object_model'})
-        response.status_code = 400
     except ObjectDoesNotExist:
         response = JsonResponse(
             {'error': f"Object with code_id:{code_id!r} does not exist. Please specify the correct code_id"})
         response.status_code = 400
+        return response
     except Exception:
         response = JsonResponse({'error': 'Unexpected error'})
         response.status_code = 400
+        return response
     else:
         response = JsonResponse({'error': 'Unexpected action.'})
         response.status_code = 400
+        return response

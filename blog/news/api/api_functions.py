@@ -36,7 +36,7 @@ def post_already_viewed_today(request: HttpRequest, post_id: int) -> bool:
 
 
 def post_viewed(request: HttpRequest, post_object: Post, post_id: int, action: HttpRequest,
-                user_post_already_viewed_today: bool) -> None:
+                user_post_already_viewed_today: bool) -> JsonResponse:
     """
     Checks if the post has been viewed today.
 
@@ -57,6 +57,9 @@ def post_viewed(request: HttpRequest, post_object: Post, post_id: int, action: H
                      details=f'ip={get_client_ip(request)}, code_id={post_id} viewed')
         logger.info(f'Block get_post_view_api. post views +=1, post id={post_id},'
                     f' ip={get_client_ip(request)}')
+        response = JsonResponse({'rate': post_object.rating, 'views': post_object.views, 'state': 'viewed'})
+        response.status_code = 200
+        return response
     else:
         track_action(request=request, action=ActionTrack.AttrAction.POST_VIEW,
                      page=ActionTrack.AttrPage.API_POST,
@@ -64,6 +67,9 @@ def post_viewed(request: HttpRequest, post_object: Post, post_id: int, action: H
                      details=f'from ip={get_client_ip(request)}, code_id={post_id}')
         logger.debug(f'Block get_post_view_api Post views change unsuccessfully. Already viewed today. '
                      f'action={action}, from ip={get_client_ip(request)}')
+        response = JsonResponse({'rate': post_object.rating, 'views': post_object.views, 'state': 'Already viewed'})
+        response.status_code = 200
+        return response
 
 
 def post_change_rating(request: HttpRequest, post_object: Post, post_id: int, action: HttpRequest,
