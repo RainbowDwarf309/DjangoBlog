@@ -7,6 +7,7 @@ from .forms import CreatePostForm
 from django.utils.decorators import method_decorator
 from django.urls import reverse, reverse_lazy
 from django.db.models import F, Q
+from django.contrib.auth.models import User
 from .forms import CommentSubmitForm
 
 
@@ -100,6 +101,24 @@ class PostsByTagView(ListView):
         return context
 
 
+class PostsByAuthorView(ListView):
+    template_name = 'news/authors_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 4
+    allow_empty = False
+
+    def get_queryset(self):
+        return Post.objects.filter(author=User.objects.get(pk=self.kwargs['pk']),
+                                   is_published=True).select_related('category', 'author').prefetch_related('tags')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(pk=self.kwargs['pk'])
+        context['author'] = user
+        context['title'] = user.username
+        return context
+
+
 @method_decorator(login_required, name='dispatch')
 class CreatePostView(CreateView):
     form_class = CreatePostForm
@@ -129,5 +148,5 @@ class SearchPostView(ListView):
     def get_queryset(self):
         search_query = self.request.GET.get('search')
         queryset = Post.objects.filter(Q(title__icontains=search_query) | Q(author__username__icontains=search_query)).\
-            prefetch_related('tags').exclude(is_published=False).order_by(self.ordering)
+            select_related('author').prefetch_related('tags').exclude(is_published=False).order_by(self.ordering)
         return queryset
