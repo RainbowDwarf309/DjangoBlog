@@ -8766,6 +8766,11 @@ button.bg-dark:focus {
   box-shadow: none !important;
 }
 
+.insta-image {
+  height: 300px !important;
+  width: 400px !important;
+}
+
 .w-25 {
   width: 25% !important;
 }
