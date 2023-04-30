@@ -44,7 +44,7 @@
                         {% endif %}
                     </div>
                     <small class="small text-muted">
-                        <a href="#" class="text-muted">By {{post.author}}</a>
+                        <a href="{{post.get_absolute_author_url}}" class="text-muted">By {{post.author}}</a>
                         <span class="px-2">·</span>
                         <span>{{ post.created_at|date:"M d Y" }}</span>
                         <span class="px-2">·</span>

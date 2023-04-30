@@ -7,6 +7,7 @@ from .user_views import *
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('post/<str:slug>', SinglePostView.as_view(), name='post'),
+    path('author/<int:pk>', PostsByAuthorView.as_view(), name='author'),
     path('category/<str:slug>', PostsByCategoryView.as_view(), name='category'),
     path('tag/<str:slug>', PostsByTagView.as_view(), name='tag'),
     path('create_post', CreatePostView.as_view(), name='create_post'),

@@ -80,15 +80,15 @@ class Post(models.Model):
         APPROVED = 'APPROVED'
         DELETED = 'DELETED'
 
-    title = models.CharField(max_length=150, verbose_name='Заголовок')
+    title = models.CharField(max_length=150, verbose_name='Title')
     slug = models.SlugField(max_length=255, verbose_name='Url', unique=True)
-    author = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='автор поста')
-    content = models.TextField(blank=True, verbose_name='Содержание')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото', blank=True)
-    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    author = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='Author')
+    content = models.TextField(blank=True, verbose_name='Content')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Publication date')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated')
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Photo', blank=True)
+    is_published = models.BooleanField(default=True, verbose_name='Published')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Category')
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     views = models.IntegerField(default=0)
     status = models.CharField(max_length=15, choices=AttrStatus.choices,
@@ -97,9 +97,14 @@ class Post(models.Model):
     likes = models.PositiveBigIntegerField(default=0)
     dislikes = models.PositiveBigIntegerField(default=0)
     rating = models.IntegerField(default=0)
+    link = models.URLField(max_length=200, unique=True, blank=True, null=True, default=None,
+                           verbose_name=_('Post link'))
 
     def get_absolute_url(self):
         return reverse('post', kwargs={"slug": self.slug})
+
+    def get_absolute_author_url(self):
+        return reverse('author', kwargs={"pk": self.author.pk})
 
     def __str__(self):
         return f"{self.title}, {self.author}, {self.category}, {self.slug}, {self.tags}"
