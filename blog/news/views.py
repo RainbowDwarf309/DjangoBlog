@@ -2,7 +2,7 @@ from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from .models import Post, Category, Tag, Comment
+from .models import Post, Category, Tag, Comment, FavoriteCategory
 from .forms import CreatePostForm
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
@@ -25,6 +25,32 @@ class HomeView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Django Blog'
+        return context
+
+
+class CategoriesListView(ListView):
+    model = Category
+    template_name = 'news/categories_list.html'
+    context_object_name = 'categories'
+
+    def get_favorites(self) -> list:
+        """if user is not anonymous, then checks category in favorite and returns list of categories"""
+        objects_list = []
+        if not self.request.user.is_anonymous:
+            favorites = FavoriteCategory.objects.filter(user=self.request.user)
+            for fav in favorites:
+                objects_list.append(fav.obj)
+            return objects_list
+        return objects_list
+
+
+    def get_queryset(self):
+        return Category.objects.filter(photo__isnull=False)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['favorites'] = self.get_favorites()
+        context['title'] = 'Categories'
         return context
 
 
@@ -74,7 +100,7 @@ class PostsByCategoryView(ListView):
     template_name = 'news/index.html'
     context_object_name = 'posts'
     paginate_by = 4
-    allow_empty = False
+    allow_empty = True
 
     def get_queryset(self):
         return Post.objects.filter(category=Category.objects.get(slug=self.kwargs['slug']),
@@ -90,7 +116,7 @@ class PostsByTagView(ListView):
     template_name = 'news/index.html'
     context_object_name = 'posts'
     paginate_by = 4
-    allow_empty = False
+    allow_empty = True
 
     def get_queryset(self):
         return Post.objects.filter(tags=Tag.objects.get(slug=self.kwargs['slug']),
@@ -106,7 +132,7 @@ class PostsByAuthorView(ListView):
     template_name = 'news/authors_posts.html'
     context_object_name = 'posts'
     paginate_by = 4
-    allow_empty = False
+    allow_empty = True
 
     def get_queryset(self):
         return Post.objects.filter(author=User.objects.get(pk=self.kwargs['pk']),

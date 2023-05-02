@@ -63,6 +63,48 @@ function addToFavorite(url, slug, element) {
 
 }
 
+function addCategoryToFavorite(url, slug, element) {
+    let host = window.location.protocol + "//" + window.location.host
+    $.ajax({
+        url: host + url,
+        type: "get",
+        data : {
+            "slug": slug
+        },
+        success: function (data, textStatus, response) {
+            if (response.responseJSON) {
+                if (data.state === "added") {
+                    if ($(element).hasClass("btn-primary")) {
+                    }
+                    else{
+                        $(element).addClass("btn-primary")
+                        $(element).addClass("favorite")
+                        $(element).removeClass("heart")
+                    }
+                }
+                else {
+                    $(element).removeClass("btn-primary")
+                    $(element).removeClass("favorite")
+                    $(element).addClass("heart")
+                }
+            }
+            else{
+                $('#heart-' + slug).popover({
+                placement: 'right',
+                content: "Only authorized users can add category to their favorites. Please sign in!",
+                trigger: 'hover'
+                })
+            }
+        },
+        error: function(response, textStatus, errorThrown) {
+            console.log(response)
+            console.log(textStatus)
+            console.log(errorThrown)
+        }
+    })
+
+}
+
 function setPostLikeOrDislike(url, slug, action, element) {
     $.ajax({
         url: url,

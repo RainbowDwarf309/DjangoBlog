@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block content %}
+{% include '_inc/_top_nav.html' %}
+{% include '_inc/_nav.html' %}
+
+<div class="container">
+    <br>
+    <div class="page-container">
+        <div class="page-content">
+            <div class="row">
+                {% for category in categories %}
+                <div class="card-category">
+                    <img class="category-image" src="{{category.photo.url}}" alt="">
+                    <div class="card-content">
+                        <h2 class="category-title">
+                            {{category.title}}
+                        </h2>
+                        <a href="{{category.get_absolute_url}}" class="view-all-posts">
+                            View all posts
+                            <span class="ti-arrow-right"></span>
+                        </a>
+                        <button
+                                class="btn circle {% if category in favorites %} btn-primary favorite {% else %} heart {% endif %}"
+                                id="heart-{{category.slug}}"
+                                onclick='javascript:addCategoryToFavorite("{% url "ajax_favorite_category" %}", "{{ category.slug }}", this)'>
+                            <i class="ti-heart"></i>
+                        </button>
+
+                    </div>
+                </div>
+                <br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="page-sidebar text-center">
+            {% include '_inc/_sidebar.html' %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extend_scripts %}
+<script src="{% static 'assets/vendors/jquery/jquery-3.4.1.js' %}"></script>
+<script src="{% static 'assets/vendors/bootstrap/bootstrap.bundle.js' %}"></script>
+<script src="{% static 'assets/js/main_scripts.js' %}"></script>
+<script src="{% static 'assets/js/joeblog.js' %}"></script>
+{% endblock %}

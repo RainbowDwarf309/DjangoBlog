@@ -31,6 +31,8 @@ class UserProfile(models.Model):
 
 class Category(models.Model):
     title = models.CharField(max_length=255, unique=True)
+    photo = models.ImageField(upload_to='photos/categories/%Y/%m/%d/', verbose_name='Photo for category', blank=True,
+                              null=True)
     slug = models.SlugField(max_length=255, verbose_name='Url', unique=True)
 
     def __str__(self):
@@ -198,6 +200,19 @@ class FavoritePost(Favorites):
 
     def __str__(self):
         return f'User:{self.user}, Favorite Post:{self.obj}'
+
+    @classmethod
+    def add_or_delete_favorite(cls, user, obj):
+        favorite, created = cls.objects.get_or_create(user=user, obj_id=obj.pk)
+        if not created:
+            favorite.delete()
+
+
+class FavoriteCategory(Favorites):
+    obj = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name=_('Category'))
+
+    def __str__(self):
+        return f'User:{self.user}, Favorite Category:{self.obj}'
 
     @classmethod
     def add_or_delete_favorite(cls, user, obj):

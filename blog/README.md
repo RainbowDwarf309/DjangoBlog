@@ -14,3 +14,6 @@ Python 3.10.0 +
 
     pip3 install -r blog/requirements/config
     Где config необходимый конфиг.
+    
+    запуск тестов
+    ./manage.py test --parallel --noinput
