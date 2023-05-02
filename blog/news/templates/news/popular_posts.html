@@ -5,7 +5,9 @@
     <div class="card-header p-0">
         <div class="blog-media">
             <img src="{{ post.photo.url}}" alt="" class="w-100">
+            {% if post.tags.exists %}
             <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
+            {% endif %}
         </div>
     </div>
     <div class="card-body px-0">
