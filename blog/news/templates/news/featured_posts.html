@@ -1,0 +1,14 @@
+<section>
+    <div class="feature-posts">
+        <a class="feature-post-item">
+            <span>Featured Posts</span>
+        </a>
+        {% for post in posts %}
+        <a href='{{post.get_absolute_url}}' class="feature-post-item">
+            <img src="{{post.photo.url}}" class="feature-post-image" alt="">
+            <div class="feature-post-caption">{{post.title}}</div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+<hr>
