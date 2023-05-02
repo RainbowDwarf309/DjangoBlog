@@ -5,9 +5,11 @@
 
             <div class="card-header p-0">
                 <div class="blog-media">
+                    {% if post.photo %}
                     <img src="{{ post.photo.url}}" alt="" class="w-100">
                     {% if post.tags.exists %}
                     <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -29,7 +31,9 @@
         <div class="card text-center mb-5">
             <div class="card-header p-0">
                 <div class="blog-media">
+                    {% if post.photo %}
                     <img src="{{ post.photo.url}}" alt="" class="w-100">
+                    {% endif %}
                     {% if post.tags.exists %}
                     <a href="{{post.tags.get_absolute_url}}" class="badge badge-primary">#{{post.tags.all.0}}</a>
                     {% endif %}

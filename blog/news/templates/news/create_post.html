@@ -7,10 +7,12 @@
 {% endblock %}
 
 {% block content %}
-
+{% include '_inc/_top_nav.html' %}
+{% include '_inc/_nav.html' %}
+<br>
 <div class="container">
     <div class="col-md-12">
-        <form method="post" class="validate-form flex-sb flex-w">
+        <form method="post" class="validate-form flex-sb flex-w" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
         <button type="submit" class="btn btn-primary">{% translate "Create Post" %}</button>

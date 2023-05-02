@@ -86,7 +86,8 @@ class Post(models.Model):
     content = models.TextField(blank=True, verbose_name='Content')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Publication date')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated')
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Photo', blank=True)
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Photo', blank=True,
+                              default='photos/default_blog_image.jpg')
     is_published = models.BooleanField(default=True, verbose_name='Published')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Category')
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
@@ -98,7 +99,7 @@ class Post(models.Model):
     dislikes = models.PositiveBigIntegerField(default=0)
     rating = models.IntegerField(default=0)
     link = models.URLField(max_length=200, unique=True, blank=True, null=True, default=None,
-                           verbose_name=_('Post link'))
+                           verbose_name=_('Instagram link'))
 
     def get_absolute_url(self):
         return reverse('post', kwargs={"slug": self.slug})
