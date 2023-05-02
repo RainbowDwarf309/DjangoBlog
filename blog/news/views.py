@@ -5,10 +5,11 @@ from django.http import HttpResponseRedirect
 from .models import Post, Category, Tag, Comment
 from .forms import CreatePostForm
 from django.utils.decorators import method_decorator
-from django.urls import reverse, reverse_lazy
-from django.db.models import F, Q
+from django.urls import reverse_lazy
+from django.db.models import Q
 from django.contrib.auth.models import User
 from .forms import CommentSubmitForm
+from django.shortcuts import render, reverse, redirect
 
 
 class HomeView(ListView):
@@ -132,6 +133,16 @@ class CreatePostView(CreateView):
         context['title'] = 'Django Blog'
         context['form'] = self.form_class(initial={'author': self.request.user})
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            new_post = form.save(commit=False)
+            new_post.photo = form.cleaned_data['photo']
+            new_post.save()
+            return redirect(self.success_url)
+        else:
+            return render(request, self.template_name, {'form': form})
 
 
 class SearchPostView(ListView):
