@@ -89,13 +89,15 @@ class CreatePostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'author', 'content', 'category', 'tags']
+        fields = ['title', 'author', 'content', 'category', 'tags', 'link', 'photo']
         widgets = {
             'author': forms.HiddenInput(),
             'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your post here',
                                              'rows': 5}),
             'category': forms.Select(attrs={'class': 'form-control'}),
             'tags': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'photo': forms.FileInput(attrs={'class': 'form-control', 'type': 'file', 'name': 'file'}),
+            'link': forms.TextInput(attrs={'class': 'form-control', 'type': 'text', 'placeholder': 'Instagram link'})
         }
 
     def clean_title(self):
