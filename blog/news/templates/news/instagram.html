@@ -1,0 +1,15 @@
+<div class="instagram-wrapper mt-5">
+    {% for post in posts %}
+    <a href="{{post.get_absolute_url}}" class="insta-item">
+        <img src="{{post.photo.url}}" alt="" class="insta-image">
+        <div class="overlay">
+                <span>
+                    <i class="ti-heart"></i> {{post.rating}}
+                </span>
+                <span>
+                    <i class="ti-comment"></i> {{post.comments.count}}
+                </span>
+        </div>
+    </a>
+    {% endfor %}
+</div>
