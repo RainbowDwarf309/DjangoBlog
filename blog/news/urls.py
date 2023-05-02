@@ -9,6 +9,7 @@ urlpatterns = [
     path('post/<str:slug>', SinglePostView.as_view(), name='post'),
     path('author/<int:pk>', PostsByAuthorView.as_view(), name='author'),
     path('category/<str:slug>', PostsByCategoryView.as_view(), name='category'),
+    path('categories_list/', CategoriesListView.as_view(), name='categories_list'),
     path('tag/<str:slug>', PostsByTagView.as_view(), name='tag'),
     path('create_post', CreatePostView.as_view(), name='create_post'),
     path('registration/', SignUpView.as_view(), name='registration'),
