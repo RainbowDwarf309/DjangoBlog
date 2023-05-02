@@ -25,7 +25,8 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('title',)
     list_filter = ('category', 'tags')
     readonly_fields = ('views', 'created_at', 'get_photo')
-    fields = ('title', 'slug', 'category', 'tags', 'content', 'author', 'photo', 'get_photo', 'views', 'created_at')
+    fields = ('title', 'slug', 'category', 'tags', 'content', 'author', 'photo', 'get_photo', 'views', 'created_at',
+              'link')
     list_editable = ('status',)
 
     def get_photo(self, obj):
