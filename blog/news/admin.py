@@ -34,11 +34,20 @@ class PostAdmin(admin.ModelAdmin):
             return mark_safe(f'<img src="{obj.photo.url}" width="50">')
         return '-'
 
-    get_photo.short_description = 'Фото'
+    get_photo.short_description = 'Photo'
 
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
+    list_display = ('id', 'title', 'get_photo')
+    list_display_links = ('id', 'title')
+
+    def get_photo(self, obj):
+        if obj.photo:
+            return mark_safe(f'<img src="{obj.photo.url}" width="50">')
+        return '-'
+
+    get_photo.short_description = 'Photo'
 
 
 class TagAdmin(admin.ModelAdmin):
