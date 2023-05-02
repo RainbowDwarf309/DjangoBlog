@@ -2261,6 +2261,47 @@ select.form-control:focus::-ms-value {
   line-height: 1.5;
 }
 
+ .form-control::file-selector-button {
+    padding: 0.5rem 0;
+    margin: -0.5rem 0;
+    -webkit-margin-end: 0;
+            margin-inline-end: 0;
+    color: #495057;
+    background-color: transparent;
+    pointer-events: none;
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    border-inline-end-width: 1px;
+    border-radius: 0;
+    transition: all 0.15s ease-in; }
+    @media (prefers-reduced-motion: reduce) {
+      .form-control::file-selector-button {
+        transition: none; } }
+  .form-control:hover:not(:disabled):not([readonly])::file-selector-button {
+    background-color: rgba(0, 0, 0, 0.05); }
+  .form-control::-webkit-file-upload-button {
+    padding: 0.5rem 0;
+    margin: -0.5rem 0;
+    -webkit-margin-end: 0;
+            margin-inline-end: 0;
+    color: #495057;
+    background-color: transparent;
+    pointer-events: none;
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    border-inline-end-width: 1px;
+    border-radius: 0;
+    -webkit-transition: all 0.15s ease-in;
+    transition: all 0.15s ease-in; }
+    @media (prefers-reduced-motion: reduce) {
+      .form-control::-webkit-file-upload-button {
+        -webkit-transition: none;
+        transition: none; } }
+  .form-control:hover:not(:disabled):not([readonly])::-webkit-file-upload-button {
+    background-color: rgba(0, 0, 0, 0.05); }
+
 .form-control-plaintext {
   display: block;
   width: 100%;
@@ -5367,10 +5408,10 @@ input[type="button"].btn-block {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  margin-left:250px;
   padding-left: 0;
   list-style: none;
   border-radius: 0rem;
+  justify-content: center;
 }
 
 .page-link {
@@ -8767,8 +8808,13 @@ button.bg-dark:focus {
 }
 
 .insta-image {
-  height: 300px !important;
-  width: 400px !important;
+  height: 250px !important;
+  width: 310px !important;
+}
+
+.feature-post-image {
+  height: 190px !important;
+  width: 235px !important;
 }
 
 .w-25 {
@@ -11309,6 +11355,7 @@ hr {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  justify-content: center;
 }
 
 .instagram-wrapper .insta-item {
@@ -11343,6 +11390,7 @@ hr {
   transition: all 0.3s;
   visibility: hidden;
   opacity: 0;
+  justify-content: center;
 }
 
 .instagram-wrapper .insta-item .overlay span {
@@ -11519,6 +11567,8 @@ textarea.form-control {
 .pagination .page-item {
   margin: 0 4px;
   border-radius: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .pagination .page-item:first-child, .pagination .page-item:last-child {
