@@ -1,5 +1,5 @@
 import logging
-from news.models import ActionTrack, Post, Comment
+from news.models import ActionTrack, Post, Comment, Category
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -65,6 +65,7 @@ def get_favorites_view_api(request, **kwargs) -> JsonResponse:
         model.add_or_delete_favorite(user=user, obj=my_object)
         model_fav = {
             Post: user.favoritepost,
+            Category: user.favoritecategory
         }
     except KeyError:
         response = JsonResponse({'error': 'Please specify the correct model and object_model'})
