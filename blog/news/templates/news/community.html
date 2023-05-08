@@ -1,0 +1,171 @@
+{% extends "base_platform.html" %}
+{% load static %}
+{% load i18n %}
+
+
+{% block meta_viewport %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_author %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_description %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}
+{{ block.super }}Community: {% translate "Dashboard" %}
+{% endblock %}
+
+
+{% block content %}
+{% include "_inc/_platform_left_sidebar.html" with page_name="Community" %}
+<body class="g-sidenav-show" style="background-color: #d8eaea;">
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    {% include "_inc/_platform_navbar.html" with page_name="Community" %}
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+
+
+        <div class="container">
+            <div id="tabs" class="tabs">
+
+                <section class="margin-top-25" id="section-1">
+                    <div class="row">
+                        <div class="d-flex justify-content-around margin-bottom-25">
+                            <div class="col-md-4 bg-light border-10">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 ">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                                        <h6 class="text-black text-capitalize text-center ps-3">{% translate "For all time" %}</h6>
+                                    </div>
+                                </div>
+
+                                <div class="card-body px-0 pb-2">
+                                    <div class="table-responsive p-0">
+                                        <table id="table1" class="table align-items-center mb-0"></table>
+                                        <table id="table" class="table align-items-center mb-0">
+                                            <tbody>
+                                            {% for user in total_contributors %}
+                                            <tr>
+                                                <td>
+                                                    <p class="contributor-rank{% if forloop.counter <= 3 %} contributor-rank-top{% endif %}">
+                                                        {{ forloop.counter }}</p>
+                                                </td>
+
+                                                <td>
+                                                    <div class="d-flex px-2 py-1" style="">
+                                                        <div class="image d-flex justify-content-center">
+                                                            <img src="{{ user.userprofile.avatar.url }}"
+                                                                 class="mr-3 thumb-sm rounded-circle"
+                                                                 alt="{{ user.username }} {% translate 'avatar picture' %}">
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="margin_left_30 mb-0 text-sm">{{ user.username|truncatechars:25 }}</h6>
+                                                            <p class="text-xs text-secondary mb-0">{{ user.link }}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <p class="contributor-coins-value text-xs font-weight-bold mb-0">
+                                                            {{ user.userprofile.karma }}</p>
+                                                        <span class="contributor-coins">{% blocktrans count counter=user.userprofile.karma %}discoin{% plural %}discoins{% endblocktrans %}</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 bg-light border-10">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                                        <h6 class="text-black text-capitalize text-center ps-3">{% translate "For last month" %}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0 pb-2">
+                                    <div class="table-responsive p-0">
+                                        <table class="table align-items-center mb-0"></table>
+                                        <table class="table align-items-center mb-0">
+                                            <tbody>
+                                            {% for user in month_contributors %}
+                                            <tr>
+                                                <td>
+                                                    <p class="contributor-rank{% if forloop.counter <= 3 %} contributor-rank-top{% endif %}">
+                                                        {{ forloop.counter }}</p>
+                                                </td>
+
+                                                <td>
+                                                    <div class="d-flex px-2 py-1">
+                                                        <div>
+                                                            <img src="{{ user.userprofile.avatar.url }}"
+                                                                 class="mr-3 thumb-sm rounded-circle"
+                                                                 alt="{{ user.username }} {% translate 'avatar picture' %}">
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="margin_left_30 mb-0 text-sm">{{ user.username|truncatechars:25 }}</h6>
+                                                            <p class="text-xs text-secondary mb-0">{{ user.link }}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ user.userprofile.monthly_karma }}</p>
+                                                    <span class="contributor-coins">{% blocktrans count counter=user.userprofile.karma %}discoin{% plural %}discoins{% endblocktrans %}</span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="widget user card">
+                                    <!-- User Image -->
+                                    <div class="image d-flex justify-content-center">
+                                        <a><img src="{{ user.userprofile.avatar.url }}"
+                                                alt="{{ user.username }} {% translate 'avatar picture' %}"></a>
+                                    </div>
+                                    <!-- User Name -->
+                                    <h5 class="d-flex justify-content-center text-center ">{% if not user.is_anonymous %}{{ user.username }}{% else %}<a class="alt-color" href="{% url 'login' %}">{% translate "Login" %}{% endif %}</a></h5>
+                                </div>
+
+                                <div class="widget user card dashboard-links p-0" style="height: auto">
+                                    <ul class="list-unstyled">
+                                        <li><a class="border-10" href="{% url 'user_profile_publications' %}">{% translate "My publications" %}</a></li>
+                                        <li><a class="border-10" href="{% url 'user_profile_summary' %}">{% translate "My stats" %}</a></li>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- /tabs -->
+
+
+        </div>
+
+        {% include "_inc/_user_profile_footer.html" %}
+
+    </div>
+</main>
+{{ block.super }}
+</body>
+{% endblock %}
+
+{% block to_top %}
+{{ block.super }}
+{% endblock %}
+
+{% block extend_scripts %}
+{% endblock %}
