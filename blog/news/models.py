@@ -6,6 +6,12 @@ from django.template.defaultfilters import slugify
 from PIL import Image
 from mptt.models import MPTTModel, TreeForeignKey
 from django.core.validators import validate_ipv46_address
+import django.dispatch
+
+change_post_rating_plus = django.dispatch.Signal()
+change_post_rating_minus = django.dispatch.Signal()
+change_comment_rating_plus = django.dispatch.Signal()
+change_comment_rating_minus = django.dispatch.Signal()
 
 
 class UserProfile(models.Model):
@@ -18,6 +24,25 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=60, blank=True, null=True)
     email = models.EmailField(max_length=100, blank=True, null=True)
     karma = models.BigIntegerField(verbose_name="Total karma", default=0)
+    monthly_karma = models.BigIntegerField(verbose_name="Monthly karma", default=0)
+
+    @property
+    def position_in_rating(self):
+        return UserProfile.objects.filter(karma__lt=self.karma).exclude(user__is_staff=False).count() + 1
+
+    @property
+    def position_in_monthly_rating(self):
+        return UserProfile.objects.filter(monthly_karma__lt=self.karma).exclude(user__is_staff=False).count() + 1
+
+    def plus_karma(self, karma_value: int) -> None:
+        self.monthly_karma += karma_value
+        self.karma += karma_value
+        self.save()
+
+    def minus_karma(self, karma_value: int) -> None:
+        self.monthly_karma -= karma_value
+        self.karma -= karma_value
+        self.save()
 
     def save(self, *args, **kwargs):
         super().save()
@@ -27,6 +52,9 @@ class UserProfile(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.avatar.path)
+
+    def __str__(self):
+        return f"{self.user}, {self.first_name}, {self.last_name}, {self.email}"
 
 
 class Category(models.Model):
@@ -124,9 +152,11 @@ class Post(models.Model):
 
     def set_like_or_dislike(self, is_like: bool = False, is_dislike: bool = False) -> None:
         if is_like:
+            change_post_rating_plus.send(sender=self.__class__, instance=self)
             self.likes += 1
             self.rating += 1
         elif is_dislike:
+            change_post_rating_minus.send(sender=self.__class__, instance=self)
             self.dislikes += 1
             self.rating -= 1
         self.save()
@@ -165,9 +195,11 @@ class Comment(MPTTModel):
 
     def set_like_or_dislike(self, is_like: bool = False, is_dislike: bool = False) -> None:
         if is_like:
+            change_comment_rating_plus.send(sender=self.__class__, instance=self)
             self.count_of_likes += 1
             self.rating += 1
         elif is_dislike:
+            change_comment_rating_minus.send(sender=self.__class__, instance=self)
             self.count_of_dislikes += 1
             self.rating -= 1
         self.save()
@@ -294,7 +326,7 @@ class ActionTrack(models.Model):
         POST_VIEW = 'View post'
         POST_RATING_PLUS = 'Post rating plus 1'
         POST_RATING_MINUS = 'Post rating minus 1'
-
+        EVERYDAY_KARMA_GIVEN = 'Everyday bonus'
         COMMENT_RATING_PLUS = 'Comment rating liked'
         COMMENT_RATING_MINUS = 'Comment rating disliked'
         CREATE_NEW_CHILD_COMMENT = 'Create new child comment'
