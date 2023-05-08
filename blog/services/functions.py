@@ -1,8 +1,14 @@
 import logging
-from news.models import ActionTrack, Post
+from news.models import ActionTrack, Post, User, Comment
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DataError
-from typing import Union
+from typing import Union, List
+from django.db.models import QuerySet
+from services.redis_functions import _redis_get_summary_profile_data, _redis_set_summary_profile_data
+import datetime
+import json
+
+from news import karma
 
 logger = logging.getLogger('process')
 
@@ -67,7 +73,74 @@ def track_action(request, page: ActionTrack.AttrPage, action: ActionTrack.AttrAc
 
         action_object.user_status = user_status
         action_object.save()
+
+        if not request.user.is_anonymous \
+                and not ActionTrack.objects.filter(user=action_object.user,
+                                                   date__date=datetime.datetime.today()).exists():
+            karma.everyday_bonus(action_object.user)
+            ActionTrack.objects.create(user=action_object.user, action=ActionTrack.AttrAction.EVERYDAY_KARMA_GIVEN,
+                                       page=page)
+
     except DataError as e:
         logger.error(f'Impossible to record IP {e=}')
     except Exception:
         logger.error('Track_action can\'t create new object', exc_info=True)
+
+
+def create_summary_profile_data(user: User) -> dict:
+    posts = Post.objects.filter(author=user)
+    comments = Comment.objects.filter(user_submitter=user)
+    posts_total_views = get_posts_total_views(posts)
+    return {
+        'posts_count': posts.count(),
+        'posts_approved_count': posts.filter(status=Post.AttrStatus.APPROVED).count(),
+        'posts_deleted_count': posts.filter(status=Post.AttrStatus.DELETED).count(),
+        'posts_like_dislike': get_posts_like_dislike_ratio(posts),
+        'comments_like_and_dislike': get_comments_like_dislike_ratio(comments),
+        'comments_count': comments.count(),
+        'posts_total_views': posts_total_views,
+        'updated_at': datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),
+    }
+
+
+def get_summary_profile_data(user: User) -> dict:
+    cache_key = str(user.pk) + '-summary_profile_data'
+    result = _redis_get_summary_profile_data(cache_key)
+    if result:
+        return json.loads(result)
+    else:
+        data = create_summary_profile_data(user)
+        _redis_set_summary_profile_data(cache_key, data)
+    return data
+
+
+def get_posts_like_dislike_ratio(posts: QuerySet | List[Post]) -> float:
+    """Returns average percentage like/dislike ratio(0.0-100.00) of posts"""
+    posts_likes = sum((post.likes for post in posts.exclude(status=Post.AttrStatus.DELETED)))
+    posts_dislikes = sum((post.dislikes for post in posts.exclude(status=Post.AttrStatus.DELETED)))
+    if posts_dislikes == 0:
+        return 100 if posts_likes != 0 else 50
+    return round((posts_likes / (posts_dislikes + posts_likes)) * 100, 2)
+
+
+def get_comments_like_dislike_ratio(comments: QuerySet | List[Comment]) -> float:
+    """Returns average percentage like/dislike ratio(0.0-100.00) of comments."""
+    comments_likes = sum((comment.count_of_likes for comment in comments))
+    comments_dislikes = sum((comment.count_of_dislikes for comment in comments))
+    if comments_dislikes == 0:
+        return 100 if comments_likes != 0 else 50
+    return round((comments_likes / (comments_dislikes + comments_likes)) * 100, 2)
+
+
+def get_posts_total_views(posts: QuerySet | List[Post]) -> int:
+    """Returns the sum of all views on all posts"""
+    posts_total_views = sum([post.views for post in posts])
+    return 1 if posts_total_views == 0 else posts_total_views
+
+
+def get_top_contributors_for_all_time():
+    return User.objects.filter(is_staff=False).order_by('-userprofile__karma')[:10]
+
+
+def get_top_contributors_for_last_month():
+    return User.objects.filter(is_staff=False).order_by('-userprofile__monthly_karma')[:10]
