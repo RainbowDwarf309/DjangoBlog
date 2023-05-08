@@ -29,8 +29,8 @@
                         Welcome, {{ request.user.username }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">User Profile</a>
-                        <a class="dropdown-item" href="#">Publications</a>
+                        <a class="dropdown-item" href="{% url 'user_profile_summary' %}">User Profile</a>
+                        <a class="dropdown-item" href="{% url 'user_profile_publications' %}">Publications</a>
                         <a class="dropdown-item" href="#">Community</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'user_profile_settings' %}">Settings</a>
