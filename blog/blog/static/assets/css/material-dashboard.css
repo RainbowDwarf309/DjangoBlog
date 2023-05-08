@@ -152,7 +152,7 @@ ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem; }
+  margin-bottom: 0; }
 
 ol ol,
 ul ul,
@@ -3193,6 +3193,7 @@ textarea.form-control-lg {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
+  margin: 10px;
   border: 0 solid rgba(0, 0, 0, 0.125);
   border-radius: 0.75rem; }
   .card > hr {
@@ -6813,7 +6814,7 @@ textarea.form-control-lg {
   overflow-y: scroll !important; }
 
 .shadow-primary {
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4) !important; }
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(129, 230, 217, 0.4) !important; }
 
 .shadow-secondary {
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(210, 210, 210, 0.4) !important; }
@@ -16203,5 +16204,88 @@ pre[class*="language-"] {
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .ps {
     overflow: auto !important; } }
+
+.widget{
+    box-shadow:0 1px 3px 0 rgba(0,0,0,.1);
+    padding:25px 30px 30px;
+    margin-bottom:30px;
+}
+
+
+.widget.user .image img{
+    width:157px;
+    height:157px;
+    object-fit: cover;
+    border-radius:100%;
+    border:7px solid #ebe9e9
+}
+.widget.user h5{
+    font-size:20px;
+    margin-top:23px;
+    font-weight:700;
+    margin-bottom:10px
+}
+
+.widget .widget-header.user{
+    font-size:20px;
+    letter-spacing:.05em;
+    margin-top:10px
+}
+
+.widget.dashboard-links ul li a {
+    padding-left: 20px;
+    display: block;
+    line-height: 60px;
+    font-size: 16px;
+    color: #848484;
+    border-bottom: 1px solid #ebe9e9;
+    letter-spacing: 0;
+    background-color: #fff;
+}
+
+.widget.personal-info .form-group .user-img,.widget.change-password .form-group .user-img,.widget.change-email .form-group .user-img{
+    width:60px;
+    height:60px;
+    border-radius:100%;
+    margin-right:15px;
+    border:1px solid #ebe9e9;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)
+}
+@media(max-width:768px){
+    .widget.personal-info .form-group .user-img,.widget.change-password .form-group .user-img,.widget.change-email .form-group .user-img{
+        margin-bottom:20px
+    }
+}
+
+.border-10 {
+    border-radius: 10px;
+}
+
+.contributor-coins-value {
+    color: #555;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.contributor-coins {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+    color: grey;
+}
+
+.contributor-rank {
+    margin-left: 15px;
+    color: #d3d3d3;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.71;
+    /* text-align: center; */
+    flex: 0 0 32px;
+}
+
+.contributor-rank-top {
+    color: #1B7673;
+}
 
 /*# sourceMappingURL=material-dashboard.css.map */
