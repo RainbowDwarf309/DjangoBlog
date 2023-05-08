@@ -7,4 +7,6 @@ six==1.16.0
 Pillow==9.4.0
 psycopg2==2.9.5
 python-dotenv==1.0.0
+redis==4.5.4
+
 

@@ -147,5 +147,10 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
+REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+REDIS_DBT = int(os.getenv('REDIS_DBT', 0))
+
 FORM_MAXIMUM_AVATAR_SIZE_BYTES = 524288  # defines userprofile avatar maximum size in bytes
 PASSWORD_RESET_TIMEOUT = 10800  # defines the uptime of the link (3 hours, in seconds)
+SUMMARY_PROFILE_DATA_REDIS_EXPIRE_TIME = int(os.getenv('SUMMARY_PROFILE_DATA_REDIS_EXPIRE_TIME', 21600))

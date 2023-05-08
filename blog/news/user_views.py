@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render, reverse
-from django.views.generic import CreateView, UpdateView, TemplateView, View
+from django.views.generic import CreateView, UpdateView, TemplateView, View, ListView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
@@ -16,7 +16,8 @@ from django.utils.encoding import force_bytes, force_str
 from .token import account_activation_token
 
 from .forms import UserRegistrationForm, UserProfileUpdateForm, EmailChangeForm, NewsletterForm
-from .models import UserProfile, Newsletter
+from .models import UserProfile, Newsletter, ActionTrack, Post
+from services.functions import track_action, get_summary_profile_data
 
 
 class SignUpView(CreateView):
@@ -115,6 +116,32 @@ class UserProfilePlatformView(UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(**{form_name: form})
+
+
+@method_decorator(login_required, name='dispatch')
+class UserProfilePublicationsView(ListView):
+    template_name = 'news/user_profile_publications.html'
+    model = Post
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user).select_related('category')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        track_action(self.request, page=ActionTrack.AttrPage.USER_PROFILE_PUBLICATIONS,
+                     action=ActionTrack.AttrAction.VIEW)
+        return super().get_context_data(**kwargs)
+
+
+@method_decorator(login_required, name='dispatch')
+class UserProfileSummaryView(TemplateView):
+    template_name = 'news/user_profile_summary.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_data'] = get_summary_profile_data(self.request.user)
+        track_action(self.request, page=ActionTrack.AttrPage.USER_PROFILE_SUMMARY, action=ActionTrack.AttrAction.VIEW)
+        return context
 
 
 class UserPasswordChangeView(PasswordChangeView):

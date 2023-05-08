@@ -1,8 +1,8 @@
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, TemplateView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from .models import Post, Category, Tag, Comment, FavoriteCategory
+from .models import Post, Category, Tag, Comment, FavoriteCategory, ActionTrack
 from .forms import CreatePostForm
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from .forms import CommentSubmitForm
 from django.shortcuts import render, reverse, redirect
+from services.functions import track_action, get_top_contributors_for_all_time, get_top_contributors_for_last_month
 
 
 class HomeView(ListView):
@@ -187,3 +188,14 @@ class SearchPostView(ListView):
         queryset = Post.objects.filter(Q(title__icontains=search_query) | Q(author__username__icontains=search_query)).\
             select_related('author').prefetch_related('tags').exclude(is_published=False).order_by(self.ordering)
         return queryset
+
+
+class CommunityView(TemplateView):
+    template_name = 'news/community.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_contributors'] = get_top_contributors_for_all_time()
+        context['month_contributors'] = get_top_contributors_for_last_month()
+        track_action(self.request, page=ActionTrack.AttrPage.PAGE_COMMUNITY, action=ActionTrack.AttrAction.VIEW)
+        return context

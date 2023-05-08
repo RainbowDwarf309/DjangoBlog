@@ -1,0 +1,121 @@
+{% extends "base_platform.html" %}
+{% load static %}
+{% load i18n %}
+
+
+{% block meta_viewport %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_author %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_description %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}
+{{ block.super }}Publications: {% translate "Dashboard" %}
+{% endblock %}
+
+
+{% block content %}
+{% include "_inc/_platform_left_sidebar.html" with page_name="Publications" %}
+<body class="g-sidenav-show" style="background-color: #d8eaea;">
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    {% include "_inc/_platform_navbar.html" with page_name="Publications" %}
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card padding_20_20 my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-black text-capitalize text-center ps-3">{% translate "Posts" %}</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table id="table-posts" class="table align-items-center justify-content-center mb-0">
+                                <thead id="thread_of_posts">
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                                        {% translate "Title" %}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                                        {% translate "Status" %}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                                        {% translate "Category" %}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                                        {% translate "Viewed" %}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                                        {% translate "Comments" %}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                                        {% translate "Rating +/-" %}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                                        {% translate "Posted at" %}
+                                    </th>
+                                </tr>
+                                {% for post in posts %}
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-9">
+                                        <a href="{{post.get_absolute_url}}">{{ post.title }}</a>
+                                    </th>
+                                    <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 {% if post.status == 'APPROVED' %}text-success{% else %}text-danger{% endif %}">
+                                        {{ post.status }}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                                        <a href="{{post.category.get_absolute_url}}">{{ post.category }}</a>
+                                    </th>
+                                    <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 {% if post.views > 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ post.views }}
+                                    </th>
+                                    <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 {% if post.comments.count > 0 %}text-success{% endif %}">
+                                        {{ post.comments.count }}
+                                    </th>
+                                    <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 {% if post.rating > 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ post.rating }}
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                                        {{ post.created_at|date:"M d Y" }}
+                                    </th>
+                                </tr>
+                                {% endfor %}
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <ul id="profile_pagination_posts">
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include "_inc/_user_profile_footer.html" %}
+
+    </div>
+</main>
+{{ block.super }}
+</body>
+{% endblock %}
+
+{% block to_top %}
+{{ block.super }}
+{% endblock %}
+
+{% block extend_scripts %}
+{% endblock %}

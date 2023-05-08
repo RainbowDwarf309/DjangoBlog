@@ -1,0 +1,274 @@
+{% extends "base_platform.html" %}
+{% load static %}
+{% load i18n %}
+
+
+{% block meta_viewport %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_author %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_description %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}
+{{ block.super }}Summary: {% translate "Dashboard" %}
+{% endblock %}
+
+{% block extend_head %}
+{% endblock %}
+
+
+{% block content %}
+<body class="g-sidenav-show" style="background-color: #d8eaea;">
+{% include "_inc/_platform_left_sidebar.html" with page_name="Summary" %}
+<!--<section class="user-profile section">-->
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <div class="container" style="max-width:1600px">
+
+
+        {% include "_inc/_platform_navbar.html" with page_name="Summary" %}
+
+
+        <div class="row">
+
+            <div class="col-md-10 offset-md-1 col-lg-3 offset-lg-0">
+                <div class="sidebar">
+                    <!-- User Widget -->
+                    <div class="widget user card">
+                        <!-- User Image -->
+                        <div class="image d-flex justify-content-center">
+                            <a><img src="{{ user.userprofile.avatar.url }}"
+                                    alt="{% translate 'Avatar' %} {{ user.username }}"></a>
+                        </div>
+                        <!-- User Name -->
+                        <h5 class="text-center">{{ user }} </h5>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="col-12 mt-3 mb-1">
+                                <h4 class="text-uppercase">{% translate "Karma" %}</h4>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="media-body text-left">
+                                            <span>{% translate "Total" %}</span>
+                                            <h3>{{ user.userprofile.karma }}</h3> <a href='{% url "community" %}'><span>{% translate "Position in rating" %}: {{ user.userprofile.position_in_rating }}</span></a>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <bigger><i class="pe-7s-magic-wand text-primary"></i></bigger>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="media-body text-left">
+                                            <span>{% translate "Monthly" %}</span>
+                                            <h3>{{ user.userprofile.monthly_karma }}</h3> <span>{% translate "Position in rating" %}: {{ user.userprofile.position_in_monthly_rating }}</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <bigger><i class="pe-7s-magic-wand text-primary"></i></bigger>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grey-bg container-fluid">
+                <section id="minimal-statistics">
+                    <div class="row">
+                        <div class="col-12 mt-3 mb-1">
+                            <h4 class="text-uppercase">{% translate "Publication statistics" %}</h4>
+                            <p>{% translate "Total statistics created for all time" %}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3>{{ user_data.posts_count }}</h3>
+                                                <a class="title-text-color"
+                                                   href="#"><span>{% translate "Posts added" %}</span></a>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <bigger><i class="ti-cloud-up text-primary"
+                                                           style="font-size: 300%;"></i></bigger>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3>{{ user_data.posts_approved_count }}</h3>
+                                                <span><a class="title-text-color" href="">{% translate "Posts approved" %}</a></span>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <bigger><i class="ti-face-smile text-success"
+                                                           style="font-size: 300%;"></i></bigger>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3>{{ user_data.posts_deleted_count }}</h3>
+                                                <span><a class="title-text-color" href="">{% translate "Posts deleted" %}</a></span>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <bigger><i class="ti-trash text-danger" style="font-size: 300%;"></i>
+                                                </bigger>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3 class="danger">{{ user_data.comments_like_and_dislike}}%</h3>
+                                                <span><a class="title-text-color" href="">{% translate "Comments like/dislike" %}</a></span>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <bigger><i class="ti-heart text-danger" style="font-size: 250%;"></i>
+                                                </bigger>
+                                            </div>
+                                        </div>
+                                        <div class="progress mt-1 mb-0" style="height: 5px;">
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                 style="width: {{ user_data.comments_like_and_dislike }}%"
+                                                 aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3 class="danger">{{ user_data.posts_like_dislike}}%</h3>
+                                                <span><a class="title-text-color" href="">{% translate "Posts/dislike" %}</a></span>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="ti-heart text-danger" style="font-size: 250%;"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress mt-1 mb-0" style="height: 5px;">
+                                            <div class="progress-bar bg-danger" role="progressbar"
+                                                 style="width: {{ user_data.posts_like_dislike }}%" aria-valuenow="40"
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3 class="primary">{{ user_data.comments_count }}</h3>
+                                                <span><a class="title-text-color" href="">{% translate "Total comments left" %}</a></span>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <bigger><i class="ti-comment-alt" style="font-size: 250%;"></i></bigger>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3 class="danger">{{ user_data.posts_total_views }}</h3>
+                                                <span><a class="title-text-color" href="">{% translate "Posts total views" %}</a></span>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <bigger><i class="ti-desktop" style="font-size: 250%;"></i></bigger>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="media-body text-left">
+                                                <h3 class="primary">{{ request.user.date_joined }}</h3>
+                                                <span><a class="title-text-color"
+                                                         href="">{% translate "Joined" %}</a></span>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <bigger><i class="ti-time" style="font-size: 250%;"></i></bigger>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mt-3 mb-1">
+                            <p>{% translate "Updated at" %}: {{ user_data.updated_at}}</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!--</section>-->
+
+{% endblock %}
+</main>

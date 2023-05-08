@@ -15,8 +15,8 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link text-white {% if page_name == 'Summary' %}active bg-gradient-primary{% endif %}"
-                   href="#">
+                <a class="nav-link text-white {% if page_name == 'Summary' %}active{% endif %}"
+                   href="{% url 'user_profile_summary' %}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ti-pie-chart opacity-10"></i>
                     </div>
@@ -24,8 +24,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white {% if page_name == 'Publications' %}active bg-gradient-primary{% endif %}"
-                   href="#">
+                <a class="nav-link text-white {% if page_name == 'Publications' %}active{% endif %}"
+                   href="{% url 'user_profile_publications' %}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ti-layout-accordion-list opacity-10"></i>
                     </div>
@@ -33,8 +33,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white {% if page_name == 'Community' %}active bg-gradient-primary{% endif %}"
-                   href="#">
+                <a class="nav-link text-white {% if page_name == 'Community' %}active{% endif %}"
+                   href="{% url 'community' %}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ti-agenda opacity-10"></i>
                     </div>
@@ -46,10 +46,10 @@
                     {% translate "Account pages" %}</h6>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white {% if page_name == 'Platform' %}active bg-gradient-primary{% endif %}"
-                   href="#">
+                <a class="nav-link text-white {% if page_name == 'Profile' %}active{% endif %}"
+                   href="{% url 'user_profile_settings' %}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ti-user opacity-10"></i>
+                        <i class="ti-panel opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">{% translate "Profile settings" %}</span>
                 </a>
