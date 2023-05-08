@@ -3,6 +3,10 @@
 {% load i18n %}
 
 
+{% block title %}
+{{ block.super }}Profile settings: {% translate "Dashboard" %}
+{% endblock %}
+
 {% block content %}
 
 {% include "_inc/_platform_left_sidebar.html" with page_name="Profile" %}
