@@ -17,3 +17,14 @@ Python 3.10.0 +
     
     запуск тестов
     ./manage.py test --parallel --noinput
+
+    redis
+    sudo systemctl start redis
+
+    docker:
+
+    docker-compose up -d
+    docker-compose up --force-recreate -d
+
+    run terminal in container:
+    docker exec -it container_name bash
