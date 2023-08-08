@@ -1,11 +1,12 @@
 import logging
-from news.models import ActionTrack, Post, User, Comment
+from news.models import ActionTrack, Post, User, Comment, Newsletter, NewsType
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DataError
 from typing import Union, List
 from django.db.models import QuerySet
-from services.redis_functions import _redis_get_summary_profile_data, _redis_set_summary_profile_data
-import datetime
+from services.redis_functions import _redis_get_summary_profile_data, _redis_set_summary_profile_data, \
+    redis_get_popular_posts_of_day, redis_get_popular_posts_of_week
+from datetime import datetime
 import json
 
 from news import karma
@@ -76,7 +77,7 @@ def track_action(request, page: ActionTrack.AttrPage, action: ActionTrack.AttrAc
 
         if not request.user.is_anonymous \
                 and not ActionTrack.objects.filter(user=action_object.user,
-                                                   date__date=datetime.datetime.today()).exists():
+                                                   date__date=datetime.today()).exists():
             karma.everyday_bonus(action_object.user)
             ActionTrack.objects.create(user=action_object.user, action=ActionTrack.AttrAction.EVERYDAY_KARMA_GIVEN,
                                        page=page)
@@ -99,7 +100,7 @@ def create_summary_profile_data(user: User) -> dict:
         'comments_like_and_dislike': get_comments_like_dislike_ratio(comments),
         'comments_count': comments.count(),
         'posts_total_views': posts_total_views,
-        'updated_at': datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),
+        'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
     }
 
 
@@ -144,3 +145,31 @@ def get_top_contributors_for_all_time():
 
 def get_top_contributors_for_last_month():
     return User.objects.filter(is_staff=False).order_by('-userprofile__monthly_karma')[:10]
+
+
+def get_type_of_news() -> dict:
+    type_of_news = NewsType.objects.all()[::1]
+    types_list = []
+    for types in type_of_news:
+        types_list.append(types.type_of_news)
+    return dict([(types, []) for types in types_list])
+
+
+def get_active_newsletter_subscribers() -> dict:
+    active_subscribers = Newsletter.objects.filter(is_subscribed=True)
+    type_of_news = get_type_of_news()
+    for subscriber in active_subscribers:
+        choices = subscriber.choices.all()[::1]
+        for choice in choices:
+            type_of_news.setdefault(choice.type_of_news, []).append(subscriber.email)
+    return type_of_news
+
+
+def get_popular_posts_of_day() -> QuerySet:
+    redis_posts = redis_get_popular_posts_of_day()
+    return Post.objects.filter(pk__in=redis_posts.keys())
+
+
+def get_popular_posts_of_week() -> QuerySet:
+    redis_posts = redis_get_popular_posts_of_week()
+    return Post.objects.filter(pk__in=redis_posts.keys())
