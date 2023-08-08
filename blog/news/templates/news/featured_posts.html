@@ -5,7 +5,7 @@
         </a>
         {% for post in posts %}
         <a href='{{post.get_absolute_url}}' class="feature-post-item">
-            <img src="{{post.photo.url}}" class="feature-post-image" alt="">
+            <img src="{{post.photo.url}}" class="w-100" alt="">
             <div class="feature-post-caption">{{post.title}}</div>
         </a>
         {% endfor %}
