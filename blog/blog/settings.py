@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 load_dotenv()
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'news.apps.NewsConfig',
     'mptt',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -150,6 +152,28 @@ EMAIL_USE_SSL = False
 REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
 REDIS_DBT = int(os.getenv('REDIS_DBT', 0))
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_BEAT_SCHEDULE = {
+    'Set posts of day': {
+        'task': 'news.tasks.set_posts_of_day_task',
+        'schedule': crontab(minute=0, hour='*/3'),
+    },
+    'Set posts of week': {
+        'task': 'news.tasks.set_posts_of_week_task',
+        'schedule': crontab(minute=0, hour="*/3", day_of_week=7),
+    },
+    'Send posts of day task': {
+        'task': 'news.tasks.send_posts_of_day_task',
+        'schedule': crontab(minute=0, hour='22'),
+    },
+    'Send posts of week task': {
+        'task': 'news.tasks.send_posts_of_week_task',
+        'schedule': crontab(minute=0, hour=22, day_of_week=7),
+    },
+}
 
 FORM_MAXIMUM_AVATAR_SIZE_BYTES = 524288  # defines userprofile avatar maximum size in bytes
 PASSWORD_RESET_TIMEOUT = 10800  # defines the uptime of the link (3 hours, in seconds)
