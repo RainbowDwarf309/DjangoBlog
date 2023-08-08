@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load static %}
+<!doctype html>
+<html>
+<body>
+Here's a collection of today's most popular posts.
+{% for post in posts %}
+<p>{{post.title}}</p>
+<p>Post's Author: {{post.author}}</p>
+<p>Category:{{post.category}}</p>
+<p>Content:{{ post.content|safe|linebreaks|truncatewords:10 }}</p>
+<p>Link: {{ domain }}/{{post.get_absolute_url}}</p>
+{% endfor %}
+</body>
+</html>

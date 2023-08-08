@@ -28,3 +28,8 @@ Python 3.10.0 +
 
     run terminal in container:
     docker exec -it container_name bash
+
+    celery:
+    Запуск worker celery: celery -A blog worker -l info
+    Запуск очереди задач: celery -A blog beat -l info
+    
