@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from .models import Comment, UserProfile, Post, FavoritePost, change_comment_rating_minus, change_post_rating_plus, \
     change_post_rating_minus, change_comment_rating_plus
 from . import karma
-from news.api.api_functions import post_change_rating
+from services.redis_functions import redis_set_new_posts
 
 
 @receiver(post_save, sender=User)
@@ -65,3 +65,9 @@ def comment_plus_rating(instance, **kwargs):
 @receiver(change_comment_rating_minus, sender=Comment)
 def comment_minus_rating(instance, **kwargs):
     karma.comment_rating_minus(instance)
+
+
+@receiver(post_save, sender=Post)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        redis_set_new_posts(instance)
