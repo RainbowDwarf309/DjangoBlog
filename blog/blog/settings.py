@@ -163,7 +163,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'Set posts of week': {
         'task': 'news.tasks.set_posts_of_week_task',
-        'schedule': crontab(minute=0, hour="*/3", day_of_week=7),
+        'schedule': crontab(minute=0, hour="*/3", day_of_week='sunday'),
     },
     'Send posts of day task': {
         'task': 'news.tasks.send_posts_of_day_task',
@@ -171,7 +171,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'Send posts of week task': {
         'task': 'news.tasks.send_posts_of_week_task',
-        'schedule': crontab(minute=0, hour=22, day_of_week=7),
+        'schedule': crontab(minute=0, hour=22, day_of_week='sunday'),
     },
 }
 
