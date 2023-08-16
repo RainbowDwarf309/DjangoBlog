@@ -12,6 +12,8 @@ Python 3.10.0 +
     alter role user_name_blog set timezone to 'UTC';
     ALTER USER user_name_blog CREATEDB;
 
+    pip freeze > requirements/prod.txt
+
     pip3 install -r blog/requirements/config
     Где config необходимый конфиг.
     
