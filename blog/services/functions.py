@@ -14,15 +14,6 @@ from news import karma
 logger = logging.getLogger('process')
 
 
-def get_post_from_slug(self, slug='slug') -> Post | bool:
-    try:
-        return Post.objects.get(slug=self.kwargs[slug])
-    except ObjectDoesNotExist:
-        return False
-    except Exception:
-        return False
-
-
 def get_param_from_request(request, param) -> Union[str, None]:
     """ HTTP_REFERER HTTP_USER_AGENT REMOTE_HOST"""
     return request.META.get(param) if request.META.get(param) else None

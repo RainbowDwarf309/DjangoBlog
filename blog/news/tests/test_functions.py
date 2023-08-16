@@ -14,7 +14,6 @@ from services.functions import (
     get_param_from_request,
     track_action,
     get_session_key,
-    get_post_from_slug
 )
 
 
@@ -75,18 +74,6 @@ class GetCouponFromSlugTest(TestCase):
         }
         self.post = Post.objects.create(**self.post_credentials)
         self.post.save()
-
-    def test_not_exist(self):
-        my_class = MyTestClass(kwargs={'slug': 'someslug'})
-        self.assertFalse(get_post_from_slug(my_class))  # Obj doesn't exist
-
-    def test_exist(self):
-        my_class = MyTestClass(kwargs={'slug': self.post.slug})
-        self.assertEqual(get_post_from_slug(my_class), self.post)
-
-    def test_not_slug(self):
-        my_class = MyTestClass(kwargs={'another-slug': self.post.slug})
-        self.assertEqual(get_post_from_slug(my_class, slug='another-slug'), self.post)
 
 
 class TrackActionTest(TestCase):
