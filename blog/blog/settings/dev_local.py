@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from dotenv import load_dotenv
 from celery.schedules import crontab
+from pathlib import Path
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -25,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 ALLOWED_HOSTS = ['*']
 
@@ -153,9 +154,9 @@ REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
 REDIS_DBT = int(os.getenv('REDIS_DBT', 0))
 
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
-CELERY_TASK_TRACK_STARTED = True
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+CELERY_TASK_TRACK_STARTED = os.environ.get('CELERY_TASK_TRACK_STARTED')
 CELERY_BEAT_SCHEDULE = {
     'Set posts of day': {
         'task': 'news.tasks.set_posts_of_day_task',
