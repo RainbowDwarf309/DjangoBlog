@@ -44,15 +44,6 @@ class UserProfile(models.Model):
         self.karma -= karma_value
         self.save()
 
-    def save(self, *args, **kwargs):
-        super().save()
-        img = Image.open(self.avatar.path)
-        # resize image
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.avatar.path)
-
     def __str__(self):
         return f"{self.user}, {self.first_name}, {self.last_name}, {self.email}"
 
