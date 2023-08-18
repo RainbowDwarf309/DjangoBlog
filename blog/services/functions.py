@@ -106,7 +106,7 @@ def get_summary_profile_data(user: User) -> dict:
     return data
 
 
-def get_posts_like_dislike_ratio(posts: QuerySet | List[Post]) -> float:
+def get_posts_like_dislike_ratio(posts) -> float:
     """Returns average percentage like/dislike ratio(0.0-100.00) of posts"""
     posts_likes = sum((post.likes for post in posts.exclude(status=Post.AttrStatus.DELETED)))
     posts_dislikes = sum((post.dislikes for post in posts.exclude(status=Post.AttrStatus.DELETED)))
@@ -115,7 +115,7 @@ def get_posts_like_dislike_ratio(posts: QuerySet | List[Post]) -> float:
     return round((posts_likes / (posts_dislikes + posts_likes)) * 100, 2)
 
 
-def get_comments_like_dislike_ratio(comments: QuerySet | List[Comment]) -> float:
+def get_comments_like_dislike_ratio(comments) -> float:
     """Returns average percentage like/dislike ratio(0.0-100.00) of comments."""
     comments_likes = sum((comment.count_of_likes for comment in comments))
     comments_dislikes = sum((comment.count_of_dislikes for comment in comments))
@@ -124,7 +124,7 @@ def get_comments_like_dislike_ratio(comments: QuerySet | List[Comment]) -> float
     return round((comments_likes / (comments_dislikes + comments_likes)) * 100, 2)
 
 
-def get_posts_total_views(posts: QuerySet | List[Post]) -> int:
+def get_posts_total_views(posts) -> int:
     """Returns the sum of all views on all posts"""
     posts_total_views = sum([post.views for post in posts])
     return 1 if posts_total_views == 0 else posts_total_views
