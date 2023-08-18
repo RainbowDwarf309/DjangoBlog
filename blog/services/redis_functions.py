@@ -10,7 +10,10 @@ logger = logging.getLogger('process')
 
 redis_conn = redis.Redis(host=os.getenv('REDIS_HOST', '127.0.0.1'),
                          port=int(os.getenv('REDIS_PORT', 6379)),
-                         db=int(os.getenv('REDIS_DBT', 0)))
+                         db=int(os.getenv('REDIS_DBT', 0)),
+                         username=os.getenv('REDIS_USER'),
+                         password=os.getenv('REDIS_PASSWORD')
+                         )
 
 
 def _redis_get_summary_profile_data(cache_key: str):
