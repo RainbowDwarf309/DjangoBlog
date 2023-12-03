@@ -13,7 +13,6 @@ import os
 from dotenv import load_dotenv
 from celery.schedules import crontab
 
-
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,8 +42,7 @@ INSTALLED_APPS = [
     'news.apps.NewsConfig',
     'mptt',
     'django_celery_beat',
-    'cloudinary_storage',
-    'cloudinary',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -134,7 +132,6 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 INTERNAL_IPS = ['127.0.0.1']
 
