@@ -1,5 +1,6 @@
 from django.urls import include, path
 from django.contrib.auth import views
+from news.serializer.view_serializer import PostViewSet, CategoryViewSet, PostDetailViewSet
 
 from .views import *
 from .user_views import *
@@ -24,6 +25,9 @@ urlpatterns = [
     path('change_email/', ChangeEmailView.as_view(), name='change_email'),
     path('change_password/', UserPasswordChangeView.as_view(), name='change_password'),
     path('password_change/done/', views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('posts/', PostViewSet.as_view({'get': 'list'}), name='posts'),
+    path('post_detail/<str:slug>/', PostDetailViewSet.as_view(), name='post_detail'),
+    path('categories/', CategoryViewSet.as_view({'get': 'list'}), name='categories'),
 
     # API
     path('ajax/', include('news.api.urls')),
