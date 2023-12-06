@@ -30,6 +30,12 @@ DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
 ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
 
 # Application definition
+if not DEBUG:
+    REST_FRAMEWORK = {
+        'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.JSONRenderer',
+        )
+    }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
