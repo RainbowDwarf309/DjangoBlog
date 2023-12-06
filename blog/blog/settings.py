@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
 
-ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
 
 # Application definition
 if not DEBUG:
@@ -36,6 +36,12 @@ if not DEBUG:
             'rest_framework.renderers.JSONRenderer',
         )
     }
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = (
+       'http://localhost:3000',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -49,6 +55,7 @@ INSTALLED_APPS = [
     'mptt',
     'django_celery_beat',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'blog.urls'
