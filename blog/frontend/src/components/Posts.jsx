@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 
-const API_URL = 'http://localhost:8000';
+import {HOST_URL} from '../constants';
 
-export function Posts() {
-    const url = `${API_URL}/posts/`;
+export function Posts(url='/posts/') {
+    const host_url = `${HOST_URL}${url.url}`;
     const [posts, setPosts] = useState(null);
     useEffect(() => {
-        fetch(url)
+        fetch(host_url)
             .then(response => response.json())
             .then(posts => setPosts(posts))
             .catch(error => console.error('Ошибка при получении данных:', error));
@@ -34,11 +34,11 @@ export function Posts() {
                                     <img className="w-full items-center max-h-48 object-cover rounded-t-lg" src={item.photo} alt=""/>
                                 </a>
                                 <div className="p-5">
-                                    <a href={item.absolute_url}>
+                                    <a href={item.get_absolute_url}>
                                         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{item.title}</h5>
                                     </a>
                                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{getFirstSentences(item.content, 2)}</p>
-                                    <a href={item.absolute_url}
+                                    <a href={item.get_absolute_url}
                                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg hover:bg-teal-300 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-500 dark:hover:bg-teal-700 dark:focus:ring-teal-900">
                                         Read more
                                         <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
