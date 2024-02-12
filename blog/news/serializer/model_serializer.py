@@ -1,25 +1,31 @@
 from rest_framework import serializers
-from news.models import Post, Category
+from news.models import Post, Category, Tag, User
 
 
-class PostSerializer(serializers.ModelSerializer):
-    absolute_url = serializers.SerializerMethodField()
-    category_slug = serializers.SerializerMethodField()
-
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
-        fields = '__all__'
-
-    @staticmethod
-    def get_absolute_url(obj):
-        return obj.get_absolute_url()
-
-    @staticmethod
-    def get_category_slug(obj):
-        return obj.category.slug
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser']
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['title', 'slug', 'photo', 'get_absolute_url']
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['title', 'slug']
+
+
+class PostSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+    author = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ['title', 'slug', 'author', 'category', 'photo', 'content', 'created_at', 'updated_at',
+                  'get_absolute_url', 'is_published', 'views', 'status', 'likes', 'dislikes', 'rating', 'tags']
