@@ -22,7 +22,7 @@ django_debug_toolbar==3.8.1
 djangorestframework==3.14.0
 idna==3.4
 kombu==5.2.4
-Pillow==9.4.0
+pillow==10.2.0
 prompt-toolkit==3.0.38
 psycopg2-binary==2.9.7
 python-crontab==2.7.1
