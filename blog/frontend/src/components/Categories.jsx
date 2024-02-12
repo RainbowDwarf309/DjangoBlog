@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {ArrowLongRightIcon} from '@heroicons/react/24/solid'
 import {HeartIcon} from '@heroicons/react/24/solid'
 
-const API_URL = 'http://localhost:8000';
+import {HOST_URL} from '../constants';
 
 export function Categories() {
-    const url = `${API_URL}/categories/`;
+    const url = `${HOST_URL}/categories/`;
     const [data, setData] = useState(null);
     useEffect(() => {
         fetch(url)
@@ -31,7 +31,7 @@ export function Categories() {
                                  alt=""/>
                             <h5 className="absolute bottom-2 left-2 p-2 text-3xl font-sans tracking-tight text-gray-900
                              transition delay-150 duration-500 dark:text-white  group-hover:-translate-y-16">{item.title}</h5>
-                            <a href="#"
+                            <a href={item.get_absolute_url}
                                className="absolute opacity-70 bottom-4 left-2 p-2 text-xl font-sans tracking-tight text-gray-900 dark:text-white flex invisible group-hover:visible delay-500">
                                 View all posts <span><ArrowLongRightIcon
                                 className="h-6 w-6 text-gray-900 dark:text-white ml-2"/></span>
