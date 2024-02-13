@@ -17,6 +17,7 @@ function App() {
                 <Route path="/post/:slug" element={<PostDetail/>}/>
                 <Route path="/categories" element={<Categories/>}/>
                 <Route path="/category/:slug" element={<CategoryDetail/>}/>
+                <Route path="/tag/:slug" element={<CategoryDetail/>}/>
             </Routes>
         </div>
     );
