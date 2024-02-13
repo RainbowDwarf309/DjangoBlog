@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
+import Moment from 'react-moment';
+import {CalendarIcon} from "@heroicons/react/24/solid";
 
 import {HOST_URL} from '../constants';
 
-export function Posts(url='/posts/') {
+export function Posts(url = '/posts/') {
     const host_url = `${HOST_URL}${url.url}`;
     const [posts, setPosts] = useState(null);
     useEffect(() => {
@@ -10,7 +12,7 @@ export function Posts(url='/posts/') {
             .then(response => response.json())
             .then(posts => setPosts(posts))
             .catch(error => console.error('Ошибка при получении данных:', error));
-    }, []);
+    }, [host_url]);
 
     if (!posts) {
         return <div>Загрузка...</div>;
@@ -31,13 +33,18 @@ export function Posts(url='/posts/') {
                                 className="max-w-sm bg-white w-80 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                                 key={item.id}>
                                 <a href="#">
-                                    <img className="w-full items-center max-h-48 object-cover rounded-t-lg" src={item.photo} alt=""/>
+                                    <img className="w-full items-center max-h-48 object-cover rounded-t-lg"
+                                         src={item.photo} alt=""/>
                                 </a>
                                 <div className="p-5">
                                     <a href={item.get_absolute_url}>
-                                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{item.title}</h5>
+                                        <h5 className="mb-0.5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{item.title}</h5>
                                     </a>
-                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{getFirstSentences(item.content, 2)}</p>
+                                    <span
+                                        className={"mb-4 text-gray-600 flex justify-center items-center"}><CalendarIcon
+                                        className={"w-4 h-4 mr-2"}/><Moment format={"MMM DD YYYY"}
+                                                                            date={item.created_at} className={"mr-1"}/>  - By {item.author.username}</span>
+                                    <p className="mb-3 m-0 font-normal text-gray-700 dark:text-gray-400">{getFirstSentences(item.content, 2)}</p>
                                     <a href={item.get_absolute_url}
                                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg hover:bg-teal-300 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-500 dark:hover:bg-teal-700 dark:focus:ring-teal-900">
                                         Read more
