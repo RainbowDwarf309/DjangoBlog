@@ -1,16 +1,19 @@
 from django.urls import include, path
 from django.contrib.auth import views
-from news.serializer.view_serializer import PostViewSet, CategoryViewSet, PostDetailViewSet, CategoryDetailViewSet
+from news.authentication.authentication import LoginViewDRF, LogoutViewDRF, RegisterView
+from news.serializer.view_serializer import PostViewSet, CategoryViewSet, PostDetailViewSet, CategoryDetailViewSet, \
+    UserViewSet, UserProfileViewSet, UserProfileDetailViewSet, TagDetailViewSet
 
 from .views import *
 from .user_views import *
 
 urlpatterns = [
-    path('', HomeView.as_view(), name='home'),
-    path('post/<str:slug>', SinglePostView.as_view(), name='post'),
+    # Django views for delete in future
+    path('', HomeView.as_view(), name='home'),  # done
+    path('post/<str:slug>', SinglePostView.as_view(), name='post'),  # done
     path('author/<int:pk>', PostsByAuthorView.as_view(), name='author'),
-    path('category/<str:slug>', PostsByCategoryView.as_view(), name='category'),
-    path('categories_list/', CategoriesListView.as_view(), name='categories_list'),
+    path('category/<str:slug>', PostsByCategoryView.as_view(), name='category'),  # done
+    path('categories_list/', CategoriesListView.as_view(), name='categories_list'),  # done
     path('tag/<str:slug>', PostsByTagView.as_view(), name='tag'),
     path('create_post', CreatePostView.as_view(), name='create_post'),
     path('registration/', SignUpView.as_view(), name='registration'),
@@ -25,10 +28,31 @@ urlpatterns = [
     path('change_email/', ChangeEmailView.as_view(), name='change_email'),
     path('change_password/', UserPasswordChangeView.as_view(), name='change_password'),
     path('password_change/done/', views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+
+    # DRF API
     path('posts/', PostViewSet.as_view({'get': 'list'}), name='posts'),
     path('post_detail/<str:slug>/', PostDetailViewSet.as_view(), name='post_detail'),
     path('category_detail/<slug:category>/', CategoryDetailViewSet.as_view(), name='category_detail'),
     path('categories/', CategoryViewSet.as_view({'get': 'list'}), name='categories'),
+    path('tag_detail/<slug:category>/', TagDetailViewSet.as_view(), name='tags'),
+    path('users/', UserViewSet.as_view({'get': 'list'}), name='users'),
+    path('user_prfiles/', UserProfileViewSet.as_view({'get': 'list'}), name='user_profiles'),
+    path('user_profile_detail/<int:user>/', UserProfileDetailViewSet.as_view(), name='user_profile_detail'),
+    path('logins/', LoginViewDRF.as_view(), name='logins'),  # TODO: update later url and view name and add token
+    path('logouts/', LogoutViewDRF.as_view(), name='logouts'),  # TODO: update later url and view name
+    path('registration/', RegisterView.as_view(), name='register'),
+
+
+    # TODO: ChangeEmailViewSet
+    # TODO: ChangePasswordViewSet
+    # TODO: UserProfilePlatformViewSet
+    # TODO: UserProfileSummaryViewSet
+    # TODO: UserProfilePublicationsViewSet
+    # TODO: CommunityViewSet
+    # TODO: SearchPostViewSet
+    # TODO: ActivateAccountViewSet
+    # TODO: PopularPostsViewSet
+    # TODO: JWT
 
     # API
     path('ajax/', include('news.api.urls')),
