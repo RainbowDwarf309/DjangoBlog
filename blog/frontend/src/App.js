@@ -5,6 +5,7 @@ import Posts from "./components/Posts";
 import Categories from "./components/Categories";
 import PostDetail from "./components/PostDeatil"
 import CategoryDetail from "./components/CategoryDetail"
+import LoginForm from "./components/forms/LoginForm";
 import React from "react";
 
 
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/categories" element={<Categories/>}/>
                 <Route path="/category/:slug" element={<CategoryDetail/>}/>
                 <Route path="/tag/:slug" element={<CategoryDetail/>}/>
+                <Route path="/login" element={<LoginForm/>}/>
             </Routes>
         </div>
     );
