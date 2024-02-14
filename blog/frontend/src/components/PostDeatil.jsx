@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import {HOST_URL} from '../constants';
-import {LikeButton} from './LikeButton';
-import {DislikeButton} from './DislikeButton';
-import {AddToFavoriteButton} from './AddToFavoriteButton';
+import {LikeButton} from './buttons/LikeButton';
+import {DislikeButton} from './buttons/DislikeButton';
+import {AddToFavoriteButton} from './buttons/AddToFavoriteButton';
 import {EyeIcon} from "@heroicons/react/24/solid";
 import {ChatBubbleLeftRightIcon} from "@heroicons/react/24/solid";
 
