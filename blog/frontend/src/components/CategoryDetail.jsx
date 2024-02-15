@@ -13,7 +13,7 @@ export function CategoryDetail() {
             .then(response => response.json())
             .then(posts => setPosts(posts))
             .catch(error => console.error('Ошибка при получении данных:', error));
-    }, []);
+    }, [url]);
 
     if (!posts) {
         return <div>Загрузка...</div>;
