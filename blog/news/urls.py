@@ -40,7 +40,7 @@ urlpatterns = [
     path('user_profile_detail/<int:user>/', UserProfileDetailViewSet.as_view(), name='user_profile_detail'),
     path('logins/', LoginViewDRF.as_view(), name='logins'),  # TODO: update later url and view name and add token
     path('logouts/', LogoutViewDRF.as_view(), name='logouts'),  # TODO: update later url and view name
-    path('registration/', RegisterView.as_view(), name='register'),
+    path('registrations/', RegisterView.as_view(), name='register'),
 
 
     # TODO: ChangeEmailViewSet
