@@ -1,18 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import Moment from 'react-moment';
 import {CalendarIcon} from "@heroicons/react/24/solid";
-
-import {HOST_URL} from '../constants';
+import {getPosts} from "../apiDRF";
 
 export function Posts(url = '/posts/') {
-    const host_url = `${HOST_URL}${url.url}`;
     const [posts, setPosts] = useState(null);
     useEffect(() => {
-        fetch(host_url)
-            .then(response => response.json())
-            .then(posts => setPosts(posts))
-            .catch(error => console.error('Ошибка при получении данных:', error));
-    }, [host_url]);
+        getPosts(url, setPosts)
+    }, []);
 
     if (!posts) {
         return <div>Загрузка...</div>;

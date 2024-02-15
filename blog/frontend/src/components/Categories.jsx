@@ -1,20 +1,17 @@
 import React, {useState, useEffect} from 'react';
+import {getCategories} from "../apiDRF";
 import {ArrowLongRightIcon} from '@heroicons/react/24/solid'
 import {HeartIcon} from '@heroicons/react/24/solid'
 
-import {HOST_URL} from '../constants';
 
 export function Categories() {
-    const url = `${HOST_URL}/categories/`;
-    const [data, setData] = useState(null);
+
+    const [categories, setCategories] = useState(null);
     useEffect(() => {
-        fetch(url)
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch(error => console.error('Ошибка при получении данных:', error));
+        getCategories(setCategories)
     }, []);
 
-    if (!data) {
+    if (!categories) {
         return <div>Загрузка...</div>;
     }
 
@@ -22,7 +19,7 @@ export function Categories() {
         <div>
             <div className="max-w-screen-lg mx-auto p-10 sm:p-8 md:p-10">
                 <div className="grid md:grid-cols-2 sm:grid-cols-2 gap-x-1 gap-y-10">
-                    {data.map(item => (
+                    {categories.map(item => (
                         <div
                             className="cursor-pointer bg-white max-w-lg sm:max-w-sm rounded-lg shadow overflow-hidden relative group"
                             key={item.id}>
