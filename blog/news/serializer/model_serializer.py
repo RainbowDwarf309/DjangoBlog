@@ -24,7 +24,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ['title', 'slug']
+        fields = ['title', 'slug', 'get_absolute_url']
 
 
 class PostSerializer(serializers.ModelSerializer):

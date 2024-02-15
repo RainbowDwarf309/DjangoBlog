@@ -4,9 +4,9 @@ import Posts from './Posts';
 
 import {HOST_URL} from '../constants';
 
-export function CategoryDetail() {
+export function TagDetail() {
     const {slug} = useParams();
-    const url = `${HOST_URL}/category_detail/${slug}/`;
+    const url = `${HOST_URL}/tag_detail/${slug}/`;
     const [posts, setPosts] = useState(null);
     useEffect(() => {
         fetch(url)
@@ -21,9 +21,9 @@ export function CategoryDetail() {
 
     return (
         <div>
-            <Posts url={`/category_detail/${slug}/`}/>
+            <Posts url={`/tag_detail/${slug}/`}/>
         </div>
     )
 }
 
-export default CategoryDetail
+export default TagDetail

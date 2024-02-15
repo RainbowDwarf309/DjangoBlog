@@ -34,14 +34,13 @@ urlpatterns = [
     path('post_detail/<str:slug>/', PostDetailViewSet.as_view(), name='post_detail'),
     path('category_detail/<slug:category>/', CategoryDetailViewSet.as_view(), name='category_detail'),
     path('categories/', CategoryViewSet.as_view({'get': 'list'}), name='categories'),
-    path('tag_detail/<slug:category>/', TagDetailViewSet.as_view(), name='tags'),
+    path('tag_detail/<slug:tag>/', TagDetailViewSet.as_view(), name='tags'),
     path('users/', UserViewSet.as_view({'get': 'list'}), name='users'),
     path('user_profiles/', UserProfileViewSet.as_view({'get': 'list'}), name='user_profiles'),
     path('user_profile_detail/<int:user>/', UserProfileDetailViewSet.as_view(), name='user_profile_detail'),
     path('logins/', LoginViewDRF.as_view(), name='logins'),  # TODO: update later url and view name and add token
     path('logouts/', LogoutViewDRF.as_view(), name='logouts'),  # TODO: update later url and view name
-    path('registrations/', RegisterView.as_view(), name='register'),
-
+    path('registrations/', RegisterView.as_view(), name='register'),  # TODO: update later url and view name
 
     # TODO: ChangeEmailViewSet
     # TODO: ChangePasswordViewSet

@@ -40,9 +40,9 @@ export function PostDetail() {
             <div className="max-w-screen-lg mx-auto p-10 mb-1 overflow-hidden">
                 <h3 className="text-4xl mt-0 mb-4 text-start">{post.title}</h3>
                 <h4 className="mt-0 mb-4 text-start">Post's tags: {post.tags.map(tag => (
-                    <a href="#" key={tag.id}
+                    <a href={tag.get_absolute_url} key={tag.id}
                        className="text-start p-0.5 bg-teal-500 text-white">#{tag.title}</a>))}</h4>
-                <h4 className="mt-0 mb-4 text-start">Category: <a href="#"
+                <h4 className="mt-0 mb-4 text-start">Category: <a href={post.category.get_absolute_url}
                                                                   className="p-0.5 text-start bg-teal-500 text-white">{post.category.title}</a>
                 </h4>
                 <img className="object-contain max-w-full max-h-128 w-full h-auto rounded-lg" src={post.photo} alt=""/>
