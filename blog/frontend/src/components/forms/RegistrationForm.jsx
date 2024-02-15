@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {HOST_URL} from "../../constants";
-import {LockClosedIcon, UserCircleIcon} from "@heroicons/react/24/solid";
+import {LockClosedIcon, UserCircleIcon, EnvelopeIcon} from "@heroicons/react/24/solid";
 
-const LoginForm = () => {
+const RegistrationForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -14,23 +15,20 @@ const LoginForm = () => {
         setPassword(event.target.value);
     };
 
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        fetch(`${HOST_URL}/logins/`, {
+        fetch(`${HOST_URL}/registrations/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({username, password}),
+            body: JSON.stringify({username, password, email}),
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.token)
-                // Сохраняем полученный токен в localStorage
-                localStorage.setItem('token', data.token);
-            })
-            .catch(error => console.error('Ошибка при аутентификации:', error));
-        console.log('Submitted:', {username, password});
+            .catch(error => console.error('Ошибка при регистрации:', error));
     }
 
 
@@ -57,7 +55,7 @@ const LoginForm = () => {
                         className={"h-8 w-8 mr-2 text-white"}/>
                         <input
                             type="password"
-                            id="password"
+                            id="password_1"
                             value={password}
                             onChange={handlePasswordChange}
                             required
@@ -65,13 +63,28 @@ const LoginForm = () => {
                         />
                     </div>
                 </div>
+
+                <div className="mb-4">
+                    <label htmlFor="email" className="block text-gray-700">Email:</label>
+                    <div className={"flex justify-center items-center"}><EnvelopeIcon
+                        className={"h-8 w-8 mr-2 text-white"}/>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={handleEmailChange}
+                            required
+                            className="form-input mt-1 text-center block w-full rounded bg-white focus:bg-white focus:border-teal-500"
+                        />
+                    </div>
+                </div>
                 <button type="submit" onSubmit={handleSubmit}
-                        className="bg-white text-teal-500 py-2 px-4 rounded">Login
+                        className="bg-white text-teal-500 py-2 px-4 rounded">Register
                 </button>
-                <a href="/registration" className={"text-white block m-0 mt-4"}>Register new account</a>
+                <a href="/login" className={"text-white block m-0 mt-4"}>Already have account? Log in</a>
             </form>
         </div>
     );
 };
 
-export default LoginForm;
+export default RegistrationForm;

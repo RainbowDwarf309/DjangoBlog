@@ -13,7 +13,7 @@ export function LogoutButton() {
     return (
         <Link to="/logout" onClick={logout} className="bg-black p-2 h-5 w-5">
             <button>
-                Logout
+                Log out
             </button>
         </Link>
 

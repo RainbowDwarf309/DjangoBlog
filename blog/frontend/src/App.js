@@ -1,3 +1,4 @@
+import React from "react";
 import './App.css';
 import {Route, Routes} from 'react-router-dom'
 import {Navigation} from "./components/Navigation";
@@ -6,7 +7,7 @@ import Categories from "./components/Categories";
 import PostDetail from "./components/PostDeatil"
 import CategoryDetail from "./components/CategoryDetail"
 import LoginForm from "./components/forms/LoginForm";
-import React from "react";
+import RegistrationForm from "./components/forms/RegistrationForm";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/category/:slug" element={<CategoryDetail/>}/>
                 <Route path="/tag/:slug" element={<CategoryDetail/>}/>
                 <Route path="/login" element={<LoginForm/>}/>
+                <Route path="/registration" element={<RegistrationForm/>} />
             </Routes>
         </div>
     );
