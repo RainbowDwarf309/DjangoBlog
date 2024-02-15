@@ -9,6 +9,7 @@ import CategoryDetail from "./components/CategoryDetail"
 import LoginForm from "./components/forms/LoginForm";
 import RegistrationForm from "./components/forms/RegistrationForm";
 import TagDetail from "./components/TagDetail";
+import CreatePostForm from "./components/forms/CreatePostForm";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/" element={<Posts url={'/posts/'}/>}/>
                 <Route path="/post/:slug" element={<PostDetail/>}/>
                 <Route path="/categories" element={<Categories/>}/>
+                <Route path="/create_post" element={<CreatePostForm/>}/>
                 <Route path="/category/:slug" element={<CategoryDetail/>}/>
                 <Route path="/tag/:slug" element={<TagDetail/>}/>
                 <Route path="/login" element={<LoginForm/>}/>
