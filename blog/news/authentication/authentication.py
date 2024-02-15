@@ -11,14 +11,16 @@ from news.models import User
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         username = request.data.get('username')
         password = request.data.get('password')
+        email = request.data.get('email')
 
         if User.objects.filter(username=username).exists():
             return Response({'message': 'User with this username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.create(username=username, password=make_password(password))
+        user = User.objects.create(username=username, password=make_password(password), email=email)
         user.save()
 
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
