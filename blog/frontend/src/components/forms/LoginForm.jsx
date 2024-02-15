@@ -39,7 +39,8 @@ const LoginForm = () => {
             <form onSubmit={handleSubmit} className="bg-teal-500 p-8 rounded shadow-md">
                 <div className="mb-4">
                     <label htmlFor="username" className="block text-gray-700">Username:</label>
-                    <div className={"flex justify-center items-center"}><UserCircleIcon className={"h-8 w-8 mr-2 text-white"}/>
+                    <div className={"flex justify-center items-center"}><UserCircleIcon
+                        className={"h-8 w-8 mr-2 text-white"}/>
                         <input
                             type="text"
                             id="username"
@@ -52,7 +53,8 @@ const LoginForm = () => {
                 </div>
                 <div className="mb-4">
                     <label htmlFor="password" className="block text-gray-700">Password:</label>
-                    <div className={"flex justify-center items-center"}><LockClosedIcon className={"h-8 w-8 mr-2 text-white"}/>
+                    <div className={"flex justify-center items-center"}><LockClosedIcon
+                        className={"h-8 w-8 mr-2 text-white"}/>
                         <input
                             type="password"
                             id="password"
@@ -66,6 +68,7 @@ const LoginForm = () => {
                 <button type="submit" onSubmit={handleSubmit}
                         className="bg-white text-teal-500 py-2 px-4 rounded">Login
                 </button>
+                <a href="/registration" className={"text-white block m-0 mt-4"}>Register new account</a>
             </form>
         </div>
     );
