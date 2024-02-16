@@ -1,27 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import {HOST_URL} from '../constants';
 import {LikeButton} from './buttons/LikeButton';
 import {DislikeButton} from './buttons/DislikeButton';
 import {AddToFavoriteButton} from './buttons/AddToFavoriteButton';
 import {EyeIcon} from "@heroicons/react/24/solid";
 import {ChatBubbleLeftRightIcon} from "@heroicons/react/24/solid";
+import {getPostDetail} from "../apiDRF";
 
 export function PostDetail() {
     const {slug} = useParams();
-    const url = `${HOST_URL}/post_detail/${slug}/`;
     const [post, setPost] = useState(null);
     useEffect(() => {
-        fetch(url)
-            .then(response => response.json())
-            .then(postData => {
-                if (postData.created_at) {
-                    postData.date = new Date(postData.created_at);
-                }
-                setPost(postData);
-            })
-            .catch(error => console.error('Ошибка при получении данных:', error));
-    }, [url]);
+        getPostDetail(slug, setPost)
+    }, []);
 
     function formatDate(date) {
         return date.toLocaleDateString('ru-RU', {

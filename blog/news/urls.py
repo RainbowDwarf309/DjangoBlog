@@ -2,7 +2,7 @@ from django.urls import include, path
 from django.contrib.auth import views
 from news.authentication.authentication import LoginViewDRF, LogoutViewDRF, RegisterView
 from news.serializer.view_serializer import PostViewSet, CategoryViewSet, PostDetailViewSet, CategoryDetailViewSet, \
-    UserViewSet, UserProfileViewSet, UserProfileDetailViewSet, TagDetailViewSet
+    UserViewSet, UserProfileViewSet, UserProfileDetailViewSet, TagDetailViewSet, PostCreateView, TagViewSet
 
 from .views import *
 from .user_views import *
@@ -34,13 +34,15 @@ urlpatterns = [
     path('post_detail/<str:slug>/', PostDetailViewSet.as_view(), name='post_detail'),
     path('category_detail/<slug:category>/', CategoryDetailViewSet.as_view(), name='category_detail'),
     path('categories/', CategoryViewSet.as_view({'get': 'list'}), name='categories'),
-    path('tag_detail/<slug:tag>/', TagDetailViewSet.as_view(), name='tags'),
+    path('tag_detail/<slug:tag>/', TagDetailViewSet.as_view(), name='tag_detail'),
+    path('tags/', TagViewSet.as_view({'get': 'list'}), name='tags'),
     path('users/', UserViewSet.as_view({'get': 'list'}), name='users'),
     path('user_profiles/', UserProfileViewSet.as_view({'get': 'list'}), name='user_profiles'),
     path('user_profile_detail/<int:user>/', UserProfileDetailViewSet.as_view(), name='user_profile_detail'),
     path('logins/', LoginViewDRF.as_view(), name='logins'),  # TODO: update later url and view name and add token
     path('logouts/', LogoutViewDRF.as_view(), name='logouts'),  # TODO: update later url and view name
     path('registrations/', RegisterView.as_view(), name='register'),  # TODO: update later url and view name
+    path('posts_create/', PostCreateView.as_view(), name='post_create'),
 
     # TODO: ChangeEmailViewSet
     # TODO: ChangePasswordViewSet
