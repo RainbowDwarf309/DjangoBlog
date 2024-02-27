@@ -54,10 +54,16 @@ class UserProfileViewSet(ModelViewSet):
 
 
 class UserProfileDetailViewSet(RetrieveAPIView):
-    lookup_field = "user"
-    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        token_key = self.kwargs['token']
+        try:
+            token = Token.objects.get(key=token_key)
+            return token.user.userprofile
+        except Exception:
+            return Response({"error": "Token does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TagDetailViewSet(ListAPIView):
