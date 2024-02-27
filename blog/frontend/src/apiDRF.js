@@ -88,3 +88,18 @@ export async function getTagDetail(slug, setData) {
         console.error('Ошибка при получении данных:', error);
     }
 }
+
+
+export async function getUserProfile(user_token, setData) {
+    const url = `${HOST_URL}/user_profile_detail/${user_token}/`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Ошибка при получении данных');
+        }
+        const data = await response.json();
+        setData(data);
+    } catch (error) {
+        console.error('Ошибка при получении данных:', error);
+    }
+}
