@@ -25,12 +25,10 @@ const LoginForm = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data.token)
                 // Сохраняем полученный токен в localStorage
                 localStorage.setItem('token', data.token);
             })
             .catch(error => console.error('Ошибка при аутентификации:', error));
-        console.log('Submitted:', {username, password});
     }
 
 
