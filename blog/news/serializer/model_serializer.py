@@ -9,6 +9,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'avatar', 'bio', 'first_name', 'last_name', 'email', 'karma', 'monthly_karma']
