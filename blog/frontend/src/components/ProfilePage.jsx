@@ -31,11 +31,17 @@ export function ProfilePage() {
 						<h4 className="text-start text-gray-700 text-3xl font-bold font-sans">Karma</h4>
 					</div>
 					<div className="grid grid-cols-6 gap-72 mb-4">
-						<div className="flex items-start h-80 w-72 mb-4 rounded-2xl bg-gray-50 dark:bg-gray-900">
-							<h5 className="ml-12 text-white text-3xl">{profile.karma}</h5>
+						<div className="block items-start h-44 w-72 mb-4 rounded-2xl bg-gray-50 dark:bg-gray-900">
+							<h4 className="text-start ml-4 mb-4 mt-4 text-white text-3xl font-medium font-sans">Total</h4>
+							<h5 className="text-start ml-4 text-white text-3xl">{profile.karma}</h5>
+							<h6 className="text-start ml-4 mb-4 mt-4 text-white text-xl font-medium font-sans">Position
+								in rating: </h6>
 						</div>
-						<div className="flex items-start h-80 w-72 mb-4 rounded-2xl bg-gray-50 dark:bg-gray-900">
-							<h5 className="ml-12 text-white text-3xl">{profile.monthly_karma}</h5>
+						<div className="block items-start h-44 w-72 mb-4 rounded-2xl bg-gray-50 dark:bg-gray-900">
+							<h4 className="text-start ml-4 mb-4 mt-4 text-white text-3xl font-medium font-sans">Monthly</h4>
+							<h5 className="text-start ml-4 text-white text-3xl">{profile.monthly_karma}</h5>
+							<h6 className="text-start ml-4 mb-4 mt-4 text-white text-xl font-medium font-sans">Position
+								in rating: </h6>
 						</div>
 					</div>
 					<div className="mb-4">
